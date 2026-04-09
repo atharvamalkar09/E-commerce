@@ -1,0 +1,42 @@
+<!-- <p>order-history works!</p> -->
+
+<div class="history-container">
+  <h1>Your Order History</h1>
+
+  <div *ngIf="isLoading">Loading your orders...</div>
+
+  <div *ngIf="!isLoading && orders.length === 0">
+    <p>You haven't placed any orders yet.</p>
+  </div>
+
+  <div class="order-card" *ngFor="let order of orders">
+    <div class="order-header">
+      <span class="order-id">Order #{{ order.id }}</span>
+      <span class="order-date">{{ order.createdAt | date:'medium' }}</span>
+    </div>
+
+    <table class="history-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Price at Purchase</th>
+          <th>Quantity</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of order.items">
+          <td>{{ item.product?.name || 'Product Removed' }}</td>
+          <td>${{ item.priceAtPurchase }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>${{ item.priceAtPurchase * item.quantity }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="order-footer">
+      <p>Payment Method: <strong>{{ order.paymentMethod }}</strong></p>
+      <p class="grand-total">Total Paid: <strong>${{ order.totalAmount }}</strong></p>
+    </div>
+  </div>
+</div>

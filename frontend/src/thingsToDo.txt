@@ -1,0 +1,24 @@
+1. add checkSession in appcomponent
+2. create the product, customer routes
+3. Add for crud and get operations -> 
+types, categories, sub-category,product,users,orders
+
+
+
+--- Notes
+
+1. The service -> creates the observable and the component should subscribe it.
+
+2. Service returns observavles and the components returns the subscription
+
+--------------------------------------------------------------------------------
+
+8th march:
+1. forget password                               (Done)
+2. pagination                                    (Done)
+3. data insert -> alter
+4. Admin -> admin panel to home
+5. Search                                        (DONE)
+6. filter by type, category and subcategory      (Done)
+
+

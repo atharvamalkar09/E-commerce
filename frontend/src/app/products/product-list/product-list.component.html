@@ -1,0 +1,161 @@
+<!-- <div>
+  <section>
+    <input
+      type="text"
+      placeholder="Search by name, description, category..."
+      (input)="onSearchInput($event)"
+    />
+  </section>
+
+  <section>
+    <input
+      type="number"
+      placeholder="Min Price"
+      [(ngModel)]="filters.minPrice"
+    />
+    <input
+      type="number"
+      placeholder="Max Price"
+      [(ngModel)]="filters.maxPrice"
+    />
+    <button (click)="loadProducts()">Apply Filters</button>
+  </section> -->
+<div
+  class="search-filter-container"
+  style="display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap"
+>
+  <input
+    type="text"
+    placeholder="Search products, categories, or types..."
+    (input)="onSearchInput($event)"
+    style="flex: 1; min-width: 250px"
+  />
+
+  <select [(ngModel)]="filters.typeId" (change)="applyFilters()">
+    <option value="">All Types</option>
+    <option *ngFor="let t of types" [value]="t.id">{{ t.name }}</option>
+  </select>
+
+  <select [(ngModel)]="filters.catId" (change)="applyFilters()">
+    <option value="">All Categories</option>
+    <option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</option>
+  </select>
+
+  <input
+    type="number"
+    placeholder="Min $"
+    [(ngModel)]="filters.minPrice"
+    (change)="applyFilters()"
+    style="width: 80px"
+  />
+  <input
+    type="number"
+    placeholder="Max $"
+    [(ngModel)]="filters.maxPrice"
+    (change)="applyFilters()"
+    style="width: 80px"
+  />
+  <button class="btn btn-primary" type="button" (click)="loadProducts()">
+    <i class="fas fa-filter"></i> Filter
+  </button>
+</div>
+
+<main>
+  <div *ngIf="products.length === 0">No products match your search.</div>
+
+  <div
+    *ngFor="let product of products; trackBy: trackByProductId"
+    class="product-card"
+    style="
+      margin-bottom: 20px;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 10px;
+    "
+  >
+    <!-- <img
+      [src]="getImageUrl(product.imagePath)"
+      [routerLink]="['/products', product.id]"
+      (error)="onImageError($event)" 
+      width="150"
+      style="cursor: pointer; display: block; margin-bottom: 10px"
+      alt="{{ product.name }}"
+    /> -->
+    <img
+      [src]="getImageUrl(product.imagePath)"
+      (error)="onImageError($event)"
+      alt="{{ product.name }}"
+      style="width: 150px; cursor: pointer"
+      [routerLink]="['/products', product.id]"
+    />
+
+    <p>
+      <small>
+        {{ product.subCategory?.category?.type?.name }} /
+        {{ product.subCategory?.category?.name }} /
+        {{ product.subCategory?.name }}
+      </small>
+    </p>
+
+    <h3 [routerLink]="['/products', product.id]" style="cursor: pointer">
+      {{ product.name }}
+    </h3>
+
+    <!-- <h3>{{ product.name }}</h3> -->
+    <p class="description-preview">
+      {{ product.description | slice: 0 : 60
+      }}{{ product.description.length > 60 ? "..." : "" }}
+    </p>
+
+    <p>Price: ${{ product.price }}</p>
+    <p>Stock: {{ product.stockQuantity }}</p>
+
+    <!-- <div
+      *ngIf="authService.currentUserValue?.role !== 'admin'; else adminBadge"
+    >
+      <button
+        [disabled]="product.stockQuantity <= 0"
+        (click)="addToCart(product)"
+        class="btn-cart">
+        {{ product.stockQuantity > 0 ? "Add to Cart" : "Out of Stock" }}
+      </button>
+    </div> -->
+
+    <ng-template #adminBadge>
+      <!-- <span style="color: #666; font-style: italic">Viewing as Admin</span> -->
+    </ng-template>
+  </div>
+</main>
+
+<footer>
+  <button
+    [disabled]="filters.page === 1"
+    (click)="filters.page = filters.page - 1; loadProducts()"
+  >
+    Previous
+  </button>
+
+  <span>Page {{ filters.page }}</span>
+
+  <button
+    [disabled]="products.length < filters.limit"
+    (click)="filters.page = filters.page + 1; loadProducts()"
+  >
+    Next
+  </button>
+  <div class="d-flex align-items-center gap-2">
+    <span>Show:</span>
+    <select
+      [(ngModel)]="filters.limit"
+      (change)="applyFilters()"
+      class="form-select form-select-sm"
+      style="width: auto"
+    >
+      <option [ngValue]="5">5</option>
+      <option [ngValue]="10">10</option>
+      <option [ngValue]="20">20</option>
+      <option [ngValue]="50">50</option>
+    </select>
+    <span>products</span>
+  </div>
+</footer>
+<!-- </div> -->

@@ -1,0 +1,56 @@
+<div class="cart-page" *ngIf="(cartItems$ | async) as items; else loading">
+  <h1>Your Shopping Cart</h1>
+
+  <div *ngIf="items.length === 0" class="empty-msg">
+    <p>Your cart is empty.</p>
+    <a href="/products">Browse Products</a>
+  </div>
+
+  <div *ngIf="items.length > 0">
+    <table class="cart-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Subtotal</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of items">
+          <td>
+            <div class="prod-info">
+              <img [src]="'http://localhost:4000/' + item.product.imagePath" width="50">
+              <span>{{ item.product.name }}</span>
+            </div>
+          </td>
+          <td>${{ item.product.price }}</td>
+          <td>
+            <button (click)="changeQty(item, -1)">-</button>
+            <span class="qty-val">{{ item.quantity }}</span>
+            <button (click)="changeQty(item, 1)">+</button>
+          </td>
+          <td>${{ item.product.price * item.quantity }}</td>
+          <td>
+            <button (click)="remove(item.product.id)" class="del-btn">Remove</button>
+            <!-- <button (click)="remove(item.id)" class="del-btn">Remove</button> -->
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="cart-footer">
+  <h3>Grand Total: ${{ calculateTotal(items) }}</h3>
+  
+  <button (click)="goToCheckout(items)" class="checkout-btn">
+    Proceed to Checkout
+  </button>
+</div>
+  </div>
+</div>
+
+
+<ng-template #loading>
+  <p>Loading your cart...</p>
+</ng-template>

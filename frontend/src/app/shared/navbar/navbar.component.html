@@ -1,0 +1,33 @@
+<!-- <p>navbar works!</p> -->
+
+<nav>
+  <h1>E-Shop</h1>
+
+  <ul>
+    <li><a routerLink="/products">Home</a></li>
+
+    <span *ngIf="!currentUser">
+      <li><a routerLink="/auth/login">Login</a></li>
+      <li><a routerLink="/auth/register">Register</a></li>
+    </span>
+
+    <span *ngIf="currentUser?.role === 'customer'">
+      <li><a routerLink="/cart">My Cart</a></li>
+      <li><a routerLink="/orders/history">My Orders</a></li>
+      <li><a routerLink="/user/profile">Account</a></li>
+    </span>
+
+    <span *ngIf="currentUser?.role === 'admin'">
+      <!-- <li><a routerLink="/admin/dashboard">Admin Panel</a></li> -->
+      <li><a routerLink="/admin/users" routerLinkActive="active">Manage Users</a></li>
+      <li><a routerLink="/admin/products" routerLinkActive="active">
+        <i class="fas fa-boxes"></i> Manage Products </a></li>
+      <li><a routerLink="/admin/orders" routerLinkActive="active">
+        <i class="fas fa-shopping-cart"></i> All Orders</a></li>
+    </span>
+
+    <li *ngIf="currentUser">
+      <button (click)="logout()">Logout</button>
+    </li>
+  </ul>
+</nav>

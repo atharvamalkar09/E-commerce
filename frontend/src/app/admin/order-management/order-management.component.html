@@ -1,0 +1,240 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Order Management</h2>
+
+  <table class="table table-hover mt-3 shadow-sm">
+    <thead class="table-dark">
+      <tr>
+        <th>Order ID</th>
+        <th>Customer</th>
+        <th>Date</th>
+        <th>Total Amount</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let order of orders">
+        <td>#{{ order.id }}</td>
+        <td>{{ order.user?.name }}</td>
+        <td>{{ order.orderDate | date:'short' }}</td>
+        <td>{{ order.totalAmount | currency }}</td>
+        <td>
+          <select 
+            class="form-select form-select-sm" 
+            [ngModel]="order.status" 
+            (change)="onStatusChange(order.id, $any($event.target).value)"
+            [ngClass]="{
+              'text-success fw-bold': order.status === 'Delivered', 
+              'text-warning fw-bold': order.status === 'Pending',
+              'text-info fw-bold': order.status === 'Shipped',
+              'text-danger fw-bold': order.status === 'Cancelled'
+            }">
+            <option value="Pending">Pending</option>
+            <option value="Shipped">Shipped</option>
+            <option value="Delivered">Delivered</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+        </td>
+        <td>
+          <button class="btn btn-sm btn-outline-info" (click)="viewDetails(order)">
+            <i class="fas fa-eye"></i> View Details
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="selectedOrder" class="card mt-4 border-primary shadow">
+    <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
+      <h4 class="mb-0">Details for Order #{{ selectedOrder.id }}</h4>
+      <button class="btn btn-sm btn-light" (click)="closeDetails()">X</button>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6 border-end">
+          <div class="bg-light p-3 rounded mb-3">
+            <!-- <label class="form-label fw-bold">Update Order Status</label> -->
+            <!-- <div class="d-flex gap-2">
+              <!-<select class="form-select" [(ngModel)]="selectedOrder.status">
+                <option value="Pending">Pending</option>
+                <option value="Shipped">Shipped</option>
+                <option value="Delivered">Delivered</option>
+                <option value="Cancelled">Cancelled</option>
+              </select> -->
+              <!-- <button class="btn btn-success" (click)="onStatusChange(selectedOrder.id, selectedOrder.status)">
+                Update
+              </button> </div> -->
+          </div>
+
+          <h5>Customer Info</h5>
+          <p><strong>Email:</strong> {{ selectedOrder.user?.email }}</p>
+          <p><strong>Payment Method:</strong> {{ selectedOrder.paymentMethod }}</p>
+          <p><strong>Order Date:</strong> {{ selectedOrder.orderDate | date:'long' }}</p>
+            <p><strong>Order Status:</strong> {{ selectedOrder.status}}</p>
+        </div>
+
+        <div class="col-md-6">
+          <h5>Items</h5>
+          <ul class="list-group">
+            <li *ngFor="let item of selectedOrder.items" class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <strong>{{ item.product?.name }}</strong> 
+                <span class="text-muted small"> (x{{ item.quantity }})</span>
+              </div>
+              <span>{{ (item.priceAtPurchase * item.quantity) | currency }}</span>
+            </li>
+          </ul>
+          <hr>
+          <h5 class="text-end">Grand Total: {{ selectedOrder.totalAmount | currency }}</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+<!-- <div class="container mt-4">
+  <h2>Order Management</h2>
+
+  <table class="table table-hover mt-3">
+    <thead class="thead-dark">
+      <tr>
+        <th>Order ID</th>
+        <th>Customer</th>
+        <th>Date</th>
+        <th>Total Amount</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let order of orders">
+        <td>#{{ order.id }}</td>
+        <td>{{ order.user?.name }}</td>
+        <td>{{ order.orderDate | date:'medium' }}</td>
+        <td>{{ order.totalAmount | currency }}</td>
+        <td>
+          <span class="badge" [ngClass]="{
+            'bg-success': order.status === 'Delivered', 
+            'bg-warning': order.status === 'Pending',
+            'bg-info': order.status === 'Shipped',
+            'bg-danger': order.status === 'Cancelled'
+          }">
+            {{ order.status }}
+          </span>
+        </td>
+        <td>
+          <button class="btn btn-sm btn-info" (click)="viewDetails(order)">View Details</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="selectedOrder" class="card mt-4 border-primary shadow">
+    <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
+      <h4 class="mb-0">Details for Order #{{ selectedOrder.id }}</h4>
+      <button class="btn btn-sm btn-light" (click)="closeDetails()">X</button>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6 border-end">
+          <h5>Customer Info</h5>
+          <p><strong>Email:</strong> {{ selectedOrder.user?.email }}</p>
+          <p><strong>Payment Method:</strong> {{ selectedOrder.paymentMethod }}</p>
+          <p><strong>Order Date:</strong> {{ selectedOrder.orderDate | date:'long' }}</p>
+        </div>
+        <div class="col-md-6">
+          <h5>Items</h5>
+          <ul class="list-group">
+            <li *ngFor="let item of selectedOrder.items" class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <strong>{{ item.product?.name }}</strong> 
+                <span class="text-muted small"> (x{{ item.quantity }})</span>
+              </div>
+              <span>{{ (item.priceAtPurchase * item.quantity) | currency }}</span>
+            </li>
+          </ul>
+          <hr>
+          <h5 class="text-end">Grand Total: {{ selectedOrder.totalAmount | currency }}</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <div class="container mt-4">
+  <h2>Order Management</h2>
+
+  <table class="table table-hover mt-3">
+    <thead class="thead-dark">
+      <tr>
+        <th>Order ID</th>
+        <th>Customer</th>
+        <th>Date</th>
+        <th>Total Amount</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let order of orders">
+        <td>#{{ order.id }}</td>
+        <td>{{ order.user?.firstName }} {{ order.user?.lastName }}</td>
+        <td>{{ order.createdAt | date:'medium' }}</td>
+        <td>${{ order.totalAmount | currency }}</td>
+        <td>
+          <span class="badge" [ngClass]="{'bg-success': order.status === 'Delivered', 'bg-warning': order.status === 'Pending'}">
+            {{ order.status }}
+          </span>
+        </td>
+        <td>
+          <button class="btn btn-sm btn-info" (click)="viewDetails(order)">View Details</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="selectedOrder" class="card mt-4 border-primary">
+    <div class="card-header d-flex justify-content-between">
+      <h4>Details for Order #{{ selectedOrder.id }}</h4>
+      <button class="btn btn-close" (click)="closeDetails()">X</button>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <h5>Customer Info</h5>
+          <p>Email: {{ selectedOrder.user?.email }}</p>
+          <p>Shipping Address: {{ selectedOrder.address }}</p>
+        </div>
+        <div class="col-md-6">
+          <h5>Items</h5>
+          <ul class="list-group">
+            <li *ngFor="let item of selectedOrder.items" class="list-group-item d-flex justify-content-between">
+              {{ item.productName }} (x{{ item.quantity }})
+              <span>${{ item.price * item.quantity }}</span>
+            </li>
+          </ul>
+          <hr>
+          <h5 class="text-end">Grand Total: ${{ selectedOrder.totalPrice }}</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->

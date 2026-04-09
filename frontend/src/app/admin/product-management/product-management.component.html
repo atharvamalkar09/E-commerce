@@ -1,0 +1,517 @@
+<div class="container mt-4">
+  <div class="admin-card card p-4 shadow-sm">
+    <h2 class="mb-4">Add New Product</h2>
+    <form (ngSubmit)="submitProduct()" #productForm="ngForm">
+      
+      <div class="form-group mb-3">
+        <label class="fw-bold">Product Name</label>
+        <input type="text" class="form-control" [(ngModel)]="product.name" name="name" required placeholder="e.g. Gaming Laptop" />
+      </div>
+
+      <div class="form-group mb-3">
+        <label class="fw-bold">Description</label>
+        <textarea class="form-control" [(ngModel)]="product.description" name="description" rows="3"></textarea>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group mb-3">
+            <label class="fw-bold">Type</label>
+            <input list="typeOptions" class="form-control" [(ngModel)]="product.typeName" name="typeName" required placeholder="Select or type new...">
+            <datalist id="typeOptions">
+              <option *ngFor="let t of types" [value]="t.name"></option>
+            </datalist>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="form-group mb-3">
+            <label class="fw-bold">Category</label>
+            <input list="catOptions" class="form-control" [(ngModel)]="product.categoryName" name="categoryName" required placeholder="Select or type new...">
+            <datalist id="catOptions">
+              <option *ngFor="let c of categories" [value]="c.name"></option>
+            </datalist>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="form-group mb-3">
+            <label class="fw-bold">Sub-Category</label>
+            <input list="subOptions" class="form-control" [(ngModel)]="product.subCategoryName" name="subCategoryName" required placeholder="Select or type new...">
+            <datalist id="subOptions">
+              <option *ngFor="let s of subCategories" [value]="s.name"></option>
+            </datalist>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group mb-3">
+            <label class="fw-bold">Price ($)</label>
+            <input type="number" class="form-control" [(ngModel)]="product.price" name="price" required />
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group mb-3">
+            <label class="fw-bold">Stock</label>
+            <input type="number" class="form-control" [(ngModel)]="product.stock" name="stock" required />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group mb-4">
+        <label class="fw-bold">Product Image</label>
+        <input type="file" class="form-control" (change)="onFileSelected($event)" accept="image/*" />
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 py-2" [disabled]="!productForm.valid">
+        Save Product & Structure
+      </button>
+    </form>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <div class="taxonomy-section mt-5 border-top pt-4">
+  <h3>Store Structure Management</h3>
+
+  <div class="row">
+    <div class="col-md-4 card p-3">
+      <h5>1. Add Type</h5>
+      <input
+        #newType
+        type="text"
+        class="form-control"
+        placeholder="e.g. Men, Women"
+      />
+      <button
+        (click)="submitTaxonomy('type', newType.value); newType.value = ''"
+        class="btn btn-sm btn-primary mt-2"
+      >
+        Add Type
+      </button>
+
+      <ul class="list-group mt-3">
+        <li
+          *ngFor="let t of types"
+          class="list-group-item d-flex justify-content-between align-items-center"
+        >
+          {{ t.name }}
+          <button
+            (click)="removeTaxonomy('type', t.id)"
+            class="btn btn-sm text-danger"
+          >
+            x
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <div class="col-md-4 card p-3">
+      <h5>2. Add Category</h5>
+      <select #parentType class="form-control">
+        <option *ngFor="let t of types" [value]="t.id">{{ t.name }}</option>
+      </select>
+      <input
+        #newCat
+        type="text"
+        class="form-control mt-2"
+        placeholder="e.g. Clothing"
+      />
+      <button
+        (click)="
+          submitTaxonomy('category', newCat.value, +parentType.value);
+          newCat.value = ''
+        "
+        class="btn btn-sm btn-primary mt-2"
+      >
+        Add Category
+      </button>
+
+      <ul class="list-group mt-3" style="max-height: 200px; overflow-y: auto">
+        <li
+          *ngFor="let c of allCategories"
+          class="list-group-item d-flex justify-content-between align-items-center small"
+        >
+          {{ c.name }}
+          <span class="badge badge-light text-muted">{{ c.type?.name }}</span>
+          <button
+            (click)="removeTaxonomy('category', c.id)"
+            class="btn btn-sm text-danger"
+          >
+            x
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <div class="col-md-4 card p-3">
+      <h5>3. Add SubCategory</h5>
+      <select #parentCat class="form-control">
+        <option *ngFor="let c of allCategories" [value]="c.id">
+          {{ c.name }}
+        </option>
+      </select>
+      <input
+        #newSub
+        type="text"
+        class="form-control mt-2"
+        placeholder="e.g. T-Shirts"
+      />
+      <button
+        (click)="
+          submitTaxonomy('subcategory', newSub.value, +parentCat.value);
+          newSub.value = ''
+        "
+        class="btn btn-sm btn-primary mt-2"
+      >
+        Add SubCategory
+      </button>
+
+      <ul class="list-group mt-3" style="max-height: 200px; overflow-y: auto">
+        <li
+          *ngFor="let s of subCategories"
+          class="list-group-item d-flex justify-content-between align-items-center small"
+        >
+          {{ s.name }}
+          <button
+            (click)="removeTaxonomy('subcategory', s.id)"
+            class="btn btn-sm text-danger"
+          >
+            x
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="admin-card">
+    <h2>Add New Product</h2>
+    <form (ngSubmit)="submitProduct()" #productForm="ngForm">
+      <div class="form-group">
+        <label>Product Name</label>
+        <input type="text" [(ngModel)]="product.name" name="name" required />
+      </div>
+
+      <div class="form-group">
+        <label for="description">Product Description</label>
+        <textarea
+          id="description"
+          name="description"
+          class="form-control"
+          placeholder="Enter detailed product description..."
+          [(ngModel)]="product.description"
+          rows="4"
+        ></textarea>
+      </div>
+
+      <div class="row">
+        <div class="form-group">
+          <label>Type</label>
+          <select
+            [(ngModel)]="product.typeId"
+            name="typeId"
+            (change)="onTypeChange()"
+            required
+          >
+            <option *ngFor="let t of types" [value]="t.id">{{ t.name }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Category</label>
+          <select
+            [(ngModel)]="product.categoryId"
+            name="categoryId"
+            (change)="onCategoryChange()"
+            [disabled]="!categories.length"
+            required
+          >
+            <option *ngFor="let c of categories" [value]="c.id">
+              {{ c.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Sub-Category</label>
+          <select
+            [(ngModel)]="product.subCategoryId"
+            name="subCategoryId"
+            [disabled]="!subCategories.length"
+            required
+          >
+            <option *ngFor="let s of subCategories" [value]="s.id">
+              {{ s.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group">
+          <label>Price ($)</label>
+          <input
+            type="number"
+            [(ngModel)]="product.price"
+            name="price"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label>Stock</label>
+          <input
+            type="number"
+            [(ngModel)]="product.stock"
+            name="stock"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Image</label>
+        <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="!productForm.valid">
+        Save Product
+      </button>
+    </form>
+  </div>
+</div> -->
+
+<!-- <div class="taxonomy-section mt-5 border-top pt-4">
+  <h3>Store Structure Management</h3>
+
+  <div class="row">
+    <div class="col-md-4 card p-3">
+      <h5>1. Add Type</h5>
+      <input
+        #newType
+        type="text"
+        class="form-control"
+        placeholder="e.g. Men, Women"
+      />
+      <button
+        (click)="submitTaxonomy('type', newType.value); newType.value = ''"
+        class="btn btn-sm btn-primary mt-2"
+      >
+        Add Type
+      </button>
+
+      <ul class="list-group mt-3">
+        <li
+          *ngFor="let t of types"
+          class="list-group-item d-flex justify-content-between align-items-center"
+        >
+          {{ t.name }}
+          <button
+            (click)="removeTaxonomy('type', t.id)"
+            class="btn btn-sm text-danger"
+          >
+            x
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <div class="col-md-4 card p-3">
+      <h5>2. Add Category</h5>
+      <select #parentType class="form-control">
+        <option *ngFor="let t of types" [value]="t.id">{{ t.name }}</option>
+      </select>
+      <input
+        #newCat
+        type="text"
+        class="form-control"
+        placeholder="e.g. Clothing, Shoes"
+      />
+      <button
+        (click)="
+          submitTaxonomy('category', newCat.value, +parentType.value);
+          newCat.value = ''
+        "
+        class="btn btn-sm btn-primary mt-2"
+      >
+        Add Category
+      </button>
+    </div>
+
+    <div class="col-md-4 card p-3">
+      <h5>3. Add SubCategory</h5>
+      <select #parentCat class="form-control">
+        <option *ngFor="let c of allCategories" [value]="c.id">
+          {{ c.name }}
+        </option>
+      </select>
+      <input
+        #newSub
+        type="text"
+        class="form-control"
+        placeholder="e.g. T-Shirts, Sneakers"
+      />
+      <button
+        (click)="
+          submitTaxonomy('subcategory', newSub.value, +parentCat.value);
+          newSub.value = ''
+        "
+        class="btn btn-sm btn-primary mt-2"
+      >
+        Add SubCategory
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="admin-card">
+  <h2>Add New Product</h2>
+  <form (ngSubmit)="submitProduct()" #productForm="ngForm">
+    <div class="form-group">
+      <label>Product Name</label>
+      <input type="text" [(ngModel)]="product.name" name="name" required />
+    </div>
+
+    <div class="form-group">
+      <label for="description">Product Description</label>
+      <textarea
+        id="description"
+        name="description"
+        class="form-control"
+        placeholder="Enter detailed product description..."
+        [(ngModel)]="product.description"
+        rows="4"
+      ></textarea>
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+        <label>Type</label>
+        <select
+          [(ngModel)]="product.typeId"
+          name="typeId"
+          (change)="onTypeChange()"
+          required
+        >
+          <option *ngFor="let t of types" [value]="t.id">{{ t.name }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Category</label>
+        <select
+          [(ngModel)]="product.categoryId"
+          name="categoryId"
+          (change)="onCategoryChange()"
+          [disabled]="!categories.length"
+          required
+        >
+          <option *ngFor="let c of categories" [value]="c.id">
+            {{ c.name }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Sub-Category</label>
+        <select
+          [(ngModel)]="product.subCategoryId"
+          name="subCategoryId"
+          [disabled]="!subCategories.length"
+          required
+        >
+          <option *ngFor="let s of subCategories" [value]="s.id">
+            {{ s.name }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+        <label>Price ($)</label>
+        <input
+          type="number"
+          [(ngModel)]="product.price"
+          name="price"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label>Stock</label>
+        <input
+          type="number"
+          [(ngModel)]="product.stock"
+          name="stock"
+          required
+        />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Image</label>
+      <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+    </div>
+
+    <button type="submit" class="btn-primary" [disabled]="!productForm.valid">
+      Save Product
+    </button>
+  </form>
+</div> -->
+
+<!-- <p>product-management works!</p>
+
+<div class="admin-card">
+  <h2>Add New Product</h2>
+  <form (ngSubmit)="submitProduct()" #productForm="ngForm">
+    
+    <div class="form-group">
+      <label>Product Name</label>
+      <input type="text" [(ngModel)]="product.name" name="name" required>
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+        <label>Type</label>
+        <select [(ngModel)]="product.typeId" name="typeId" (change)="onTypeChange()" required>
+          <option *ngFor="let t of types" [value]="t.id">{{t.name}}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Category</label>
+        <select [(ngModel)]="product.categoryId" name="categoryId" [disabled]="!categories.length" required>
+          <option *ngFor="let c of categories" [value]="c.id">{{c.name}}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+        <label>Price ($)</label>
+        <input type="number" [(ngModel)]="product.price" name="price" required>
+      </div>
+      <div class="form-group">
+        <label>Stock Quantity</label>
+        <input type="number" [(ngModel)]="product.stock" name="stock" required>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Product Image</label>
+      <input type="file" (change)="onFileSelected($event)" accept="image/*">
+    </div>
+
+    <button type="submit" class="btn-primary" [disabled]="!productForm.valid">Save Product</button>
+  </form>
+</div> -->

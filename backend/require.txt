@@ -1,0 +1,91 @@
+ 
+npm init -y
+
+npm install typeorm reflect-metadata better-sqlite3 dotenv
+
+npm install --save-dev typescript ts-node nodemon @types/node @types/better-sqlite3
+
+npx tsc -init
+ 
+-write this in package.json
+
+    -scripts": {
+
+    "dev":"nodemon --watch src --exec ts --exec ts-node src/index.ts",
+
+    "build":"tsc",
+
+    "start":"node dist/index.js"
+
+  },
+
+  and in tsconfig.json- 
+
+  "module": "commonjs",
+
+    "target": "esnext",
+
+    "types": [],
+
+    "rootDirs": ["./src"],
+
+    "outDir": "./dist",
+
+     // Recommended Options
+
+    "strict": true,
+
+    "jsx": "react-jsx",
+
+    "experimentalDecorators": true,
+
+    "emitDecoratorMetadata": true,
+
+    "verbatimModuleSyntax": false,
+
+    "isolatedModules": true,
+
+    "noUncheckedSideEffectImports": true,
+
+    "moduleDetection": "force",
+
+    "skipLibCheck": true,
+ 
+---then copy the appdatasource.ts file 
+
+---create the entities
+
+---create index.ts file 
+
+---then inititlaizie appdatasource in index.ts
+ 
+---install express and inintilaize server in index.ts file
+
+npm install express
+
+npm install -D @types/express @types/node typescript ts-node
+
+in ts config add this -    "esModuleInterop": true,
+ 
+ 
+# Install the main library
+>> npm install bcrypt
+>> 
+>> # Install the TypeScript type definitions as a development dependency
+>> npm install --save-dev @types/bcrypt
+ 
+S C:\Dev\Final_task> # Install the main library
+>> npm install uuid
+>>
+>> # Install the TypeScript type definitions as a development dependency
+>> npm install -D @types/uuid
+ 
+ 
+---define routes and 
+
+middlewares and session storage map file okayyy
+
+controllers
+ 
+---done
+ 

@@ -1,0 +1,26 @@
+<div style="padding: 20px; max-width: 400px;">
+  <h2>Login</h2>
+
+  <p *ngIf="errMessage" style="color: red;">{{ errMessage }}</p>
+
+  <form (ngSubmit)="login()">
+    <div>
+      <label>Email:</label><br>
+      <input type="email" name="email" [(ngModel)]="credentials.email" required>
+    </div>
+
+    <br>
+
+    <div>
+      <label>Password:</label><br>
+      <input type="password" name="password" [(ngModel)]="credentials.password" required>
+    </div>
+
+    <br>
+
+    <button type="submit">Sign In</button>
+  </form>
+
+  <p>New user? <a routerLink="/auth/register">Create an account</a></p>
+  <p><a routerLink="/auth/forgot-password">Forgot Password?</a></p>
+</div>

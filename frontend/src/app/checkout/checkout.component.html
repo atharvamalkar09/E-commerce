@@ -1,0 +1,77 @@
+<div class="checkout-container">
+  <h2>Checkout</h2>
+
+  <div class="summary-box" *ngIf="cartItems.length > 0">
+    <h3>Order Summary</h3>
+    <ul>
+      <li *ngFor="let item of cartItems">
+        {{ item.product.name }} (x{{ item.quantity }}) - 
+        <strong>${{ item.product.price * item.quantity }}</strong>
+      </li>
+    </ul>
+    <p class="total-line">Total Amount: <span>${{ totalAmount }}</span></p>
+  </div>
+
+  <div class="payment-box">
+    <h3>Select Payment Method</h3>
+    <div class="payment-options">
+      <div *ngFor="let method of paymentMethods" class="method-row">
+        <input type="radio" 
+               [id]="method" 
+               name="paymentGroup" 
+               [value]="method" 
+               [(ngModel)]="selectedPaymentMethod">
+        <label [for]="method">{{ method }}</label>
+      </div>
+    </div>
+
+    <p class="error-msg" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+    <button class="confirm-btn" 
+            (click)="placeOrder()" 
+            [disabled]="!selectedPaymentMethod">
+      Confirm Order
+    </button>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+<!-- <p>checkout works!</p>
+
+<div class="checkout-page">
+  <h1>Finalize Your Order</h1>
+
+  <div class="checkout-grid">
+    <div class="summary-card">
+      <h3>Order Summary</h3>
+      <div *ngFor="let item of cartItems" class="summary-item">
+        <span>{{ item.product.name }} (x{{ item.quantity }})</span>
+        <span>${{ item.product.price * item.quantity }}</span>
+      </div>
+      <hr>
+      <div class="total">
+        <strong>Total Amount: ${{ totalAmount }}</strong>
+      </div>
+    </div>
+
+    <div class="payment-card">
+      <h3>Select Payment Method</h3>
+      <div *ngFor="let method of paymentMethods" class="radio-group">
+        <input type="radio" [id]="method" name="payment" [value]="method" [(ngModel)]="selectedPaymentMethod">
+        <label [for]="method">{{ method }}</label>
+      </div>
+
+      <p class="error-text" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+      <button class="order-btn" (click)="placeOrder()" [disabled]="!selectedPaymentMethod">
+        Place Order Now
+      </button>
+    </div>
+  </div>
+</div> -->
