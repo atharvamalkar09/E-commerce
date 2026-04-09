@@ -12,7 +12,9 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     catchError((err) => {
       // 401: Session expired | 403: Account Locked
-      if (err.status === 401 || err.status === 403) {
+      // BUT: Don't redirect on /api/auth/me because that endpoint returns 401 for unauthenticated users
+      // The AuthService.checkSession() already handles this error gracefully
+      if ((err.status === 401 || err.status === 403) && !req.url.includes('/api/auth/me')) {
         
         // 1. Clear the frontend state so the toggle button updates
         authService.clearLocalSession(); 

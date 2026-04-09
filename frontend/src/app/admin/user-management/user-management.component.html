@@ -1,6 +1,60 @@
-<!-- <p>user-management works!</p> -->
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<div class="user-mgmt-container" *ngIf="!isLoading">
+  <h2>Customer Management</h2>
+  <p>Manage access for registered customers.</p>
+
+  <table class="styled-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{ user.id }}</td>
+        <td>{{ user.name }}</td>
+        <td>{{ user.email }}</td>
+        <td>
+          <span [class]="user.isLocked ? 'label-locked' : 'label-active'">
+            {{ user.isLocked ? 'LOCKED' : 'ACTIVE' }}
+          </span>
+        </td>
+        <td>
+          <button 
+            (click)="openLockModal(user)" 
+            [class]="user.isLocked ? 'btn-unlock' : 'btn-lock'">
+            {{ user.isLocked ? 'Unlock' : 'Lock User' }}
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<app-confirm-dialog 
+  *ngIf="showConfirm" 
+  [message]="confirmMessage" 
+  (confirmed)="handleConfirmation($event)">
+</app-confirm-dialog>
 
 
+
+
+
+
+
+
+
+
+
+<!-- <p>user-management works!</p>
+
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 <div class="user-mgmt-container">
   <h2>Customer Management</h2>
   <p>Manage access for registered customers.</p>
@@ -36,3 +90,9 @@
     </tbody>
   </table>
 </div>
+
+<app-confirm-dialog 
+  *ngIf="showConfirm" 
+  [message]="confirmMessage" 
+  (confirmed)="handleConfirmation($event)">
+</app-confirm-dialog> -->

@@ -1,4 +1,140 @@
 <div class="cart-page" *ngIf="(cartItems$ | async) as items; else loading">
+  <h1 class="mb-4">CircuitStream Shopping Cart</h1>
+
+  <div *ngIf="items.length === 0" class="empty-msg text-center">
+    <p>Your cart is empty.</p>
+    <button class="btn btn-primary" routerLink="/products">Browse Electronics</button>
+  </div>
+
+  <div *ngIf="items.length > 0">
+    <table class="table align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>Image</th> <th>Product</th>
+          <th>Price</th>
+          <th class="text-center">Quantity</th>
+          <th>Subtotal</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of items">
+          <td>
+            <img [src]="getImageUrl(item.product.imagePath)" width="60" class="rounded shadow-sm">
+          </td>
+          <td>
+            <strong>{{ item.product.name }}</strong>
+          </td>
+          <td>${{ item.product.price | number:'1.2-2' }}</td>
+          <td class="text-center">
+            <div class="btn-group">
+              <button class="btn btn-sm btn-outline-secondary" (click)="changeQty(item, -1)">-</button>
+              <span class="px-3 py-1 border-top border-bottom">{{ item.quantity }}</span>
+              <button class="btn btn-sm btn-outline-secondary" (click)="changeQty(item, 1)">+</button>
+            </div>
+          </td>
+          <td>${{ (item.product.price * item.quantity) | number:'1.2-2' }}</td>
+          <td>
+            <button (click)="remove(item.product.id)" class="btn btn-danger btn-sm">
+              Remove
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="cart-footer mt-4 p-3 bg-light border rounded d-flex justify-content-between align-items-center">
+      <h3>Grand Total: <span class="text-success">${{ calculateTotal(items) | number:'1.2-2' }}</span></h3>
+      <button (click)="goToCheckout()" class="btn btn-success btn-lg">
+        Proceed to Checkout
+      </button>
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="text-center mt-5">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p>Connecting to CircuitStream Server...</p>
+  </div>
+</ng-template>
+
+
+
+
+
+
+
+
+
+
+<!-- <div class="cart-page" *ngIf="(cartItems$ | async) as items; else loading">
+  <h1>Your Shopping Cart</h1>
+
+  <div *ngIf="items.length === 0" class="empty-msg">
+    <p>Your cart is empty.</p>
+    <a routerLink="/products">Browse Electronics</a>
+  </div>
+
+  <div *ngIf="items.length > 0">
+    <table class="cart-table">
+      <thead>
+        <tr>
+          <th>Image</th> <th>Product</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Subtotal</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of items">
+          <td>
+            <img [src]="getImageUrl(item.product.imagePath)" width="60" class="cart-img">
+          </td>
+          <td>
+            <div class="prod-info">
+              <span>{{ item.product.name }}</span>
+            </div>
+          </td>
+          <td>${{ item.product.price }}</td>
+          <td>
+            <button (click)="changeQty(item, -1)">-</button>
+            <span class="qty-val">{{ item.quantity }}</span>
+            <button (click)="changeQty(item, 1)">+</button>
+          </td>
+          <td>${{ item.product.price * item.quantity }}</td>
+          <td>
+            <button (click)="remove(item.product.id)" class="del-btn">Remove</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="cart-footer">
+      <h3>Grand Total: ${{ calculateTotal(items) }}</h3>
+      <button (click)="goToCheckout(items)" class="checkout-btn">Proceed to Checkout</button>
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <p>Loading CircuitStream Cart...</p>
+</ng-template> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <div class="cart-page" *ngIf="(cartItems$ | async) as items; else loading">
   <h1>Your Shopping Cart</h1>
 
   <div *ngIf="items.length === 0" class="empty-msg">
@@ -10,6 +146,7 @@
     <table class="cart-table">
       <thead>
         <tr>
+          <th><img [src]="getImageUrl(item.imagePath)" class="cart-img" /></th>
           <th>Product</th>
           <th>Price</th>
           <th>Quantity</th>
@@ -34,8 +171,8 @@
           <td>${{ item.product.price * item.quantity }}</td>
           <td>
             <button (click)="remove(item.product.id)" class="del-btn">Remove</button>
-            <!-- <button (click)="remove(item.id)" class="del-btn">Remove</button> -->
-          </td>
+             <button (click)="remove(item.id)" class="del-btn">Remove</button> -->
+          <!-- </td>
         </tr>
       </tbody>
     </table>
@@ -53,4 +190,4 @@
 
 <ng-template #loading>
   <p>Loading your cart...</p>
-</ng-template>
+</ng-template> --> 

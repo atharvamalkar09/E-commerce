@@ -1,0 +1,13 @@
+<!-- <p>confirm-dialog works!</p> -->
+
+
+ <div class="modal-backdrop" (click)="onCancel()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <h3>Confirm Action</h3>
+        <p>{{ message }}</p>
+        <div class="actions">
+          <button class="btn-cancel" (click)="onCancel()">Cancel</button>
+          <button class="btn-confirm" (click)="onConfirm()">Confirm</button>
+        </div>
+      </div>
+    </div>

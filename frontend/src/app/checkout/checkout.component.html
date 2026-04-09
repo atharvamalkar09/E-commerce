@@ -1,7 +1,7 @@
 <div class="checkout-container">
   <h2>Checkout</h2>
 
-  <div class="summary-box" *ngIf="cartItems.length > 0">
+  <!-- <div class="summary-box" *ngIf="cartItems.length > 0">
     <h3>Order Summary</h3>
     <ul>
       <li *ngFor="let item of cartItems">
@@ -10,7 +10,17 @@
       </li>
     </ul>
     <p class="total-line">Total Amount: <span>${{ totalAmount }}</span></p>
+  </div> -->
+
+  <div class="summary-box" *ngIf="cartItems.length > 0">
+  <h3>Order Summary</h3>
+  <div class="checkout-item" *ngFor="let item of cartItems">
+    <img [src]="getImageUrl(item.product.imagePath)" width="40" class="me-2 rounded">
+    <span>{{ item.product.name }} (x{{ item.quantity }})</span>
+    <strong>${{ item.product.price * item.quantity }}</strong>
   </div>
+  <p class="total-line">Total Amount: <span>${{ totalAmount }}</span></p>
+</div>
 
   <div class="payment-box">
     <h3>Select Payment Method</h3>

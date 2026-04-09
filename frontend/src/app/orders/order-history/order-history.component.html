@@ -1,4 +1,72 @@
-<!-- <p>order-history works!</p> -->
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<div class="history-container" *ngIf="!isLoading">
+  <h1>Your Order History</h1>
+
+  <div *ngIf="orders.length === 0" class="no-orders">
+    <p>You haven't placed any orders yet.</p>
+  </div>
+
+  <div class="order-card" *ngFor="let order of orders">
+    <div class="order-header">
+      <span class="order-id">Order #{{ order.id }}</span>
+      <span class="order-date">{{ order.createdAt | date: "medium" }}</span>
+    </div>
+
+    <table class="history-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Price</th>
+          <th>Qty</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of order.items">
+          <td class="d-flex align-items-center">
+            <img
+              [src]="getImageUrl(item.product?.imagePath)"
+              width="40"
+              height="40"
+              class="me-2 rounded shadow-sm"
+              alt="product"
+              style="object-fit: cover;"
+            />
+            {{ item.product?.name || "Product Removed" }}
+          </td>
+          <td>${{ item.priceAtPurchase }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>${{ item.priceAtPurchase * item.quantity }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="order-footer">
+      <p>
+        Payment Method: <strong>{{ order.paymentMethod }}</strong>
+      </p>
+      <p class="grand-total">
+        Total Paid: <strong>${{ order.totalAmount }}</strong>
+      </p>
+    </div>
+  </div>
+</div>
+
+<app-confirm-dialog 
+  *ngIf="showConfirm" 
+  [message]="confirmMessage" 
+  (confirmed)="handleConfirmation($event)">
+</app-confirm-dialog>
+
+
+
+
+
+
+
+
+<!-- <p>order-history works!</p>
 
 <div class="history-container">
   <h1>Your Order History</h1>
@@ -12,21 +80,29 @@
   <div class="order-card" *ngFor="let order of orders">
     <div class="order-header">
       <span class="order-id">Order #{{ order.id }}</span>
-      <span class="order-date">{{ order.createdAt | date:'medium' }}</span>
+      <span class="order-date">{{ order.createdAt | date: "medium" }}</span>
     </div>
+
 
     <table class="history-table">
       <thead>
         <tr>
           <th>Product</th>
-          <th>Price at Purchase</th>
-          <th>Quantity</th>
+          <th>Price</th>
+          <th>Qty</th>
           <th>Subtotal</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let item of order.items">
-          <td>{{ item.product?.name || 'Product Removed' }}</td>
+          <td class="d-flex align-items-center">
+            <img
+              [src]="getImageUrl(item.product?.imagePath)"
+              width="40"
+              class="me-2 rounded shadow-sm"
+            />
+            {{ item.product?.name || "Product Removed" }}
+          </td>
           <td>${{ item.priceAtPurchase }}</td>
           <td>{{ item.quantity }}</td>
           <td>${{ item.priceAtPurchase * item.quantity }}</td>
@@ -35,8 +111,12 @@
     </table>
 
     <div class="order-footer">
-      <p>Payment Method: <strong>{{ order.paymentMethod }}</strong></p>
-      <p class="grand-total">Total Paid: <strong>${{ order.totalAmount }}</strong></p>
+      <p>
+        Payment Method: <strong>{{ order.paymentMethod }}</strong>
+      </p>
+      <p class="grand-total">
+        Total Paid: <strong>${{ order.totalAmount }}</strong>
+      </p>
     </div>
   </div>
-</div>
+</div> -->

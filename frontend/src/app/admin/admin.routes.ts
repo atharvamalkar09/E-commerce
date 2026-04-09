@@ -5,13 +5,13 @@ export const AdminRoutes: Routes = [
     path: '',
     children: [
       // Add this new route
-      {
-        path: 'dashboard',
-        loadComponent: () =>
-          import('./dashboard/dashboard.component').then(
-            (m) => m.DashboardComponent,
-          ),
-      },
+      // {
+      //   path: 'dashboard',
+      //   loadComponent: () =>
+      //     import('./dashboard/dashboard.component').then(
+      //       (m) => m.DashboardComponent,
+      //     ),
+      // },
       {
         path: 'products',
         loadComponent: () =>
@@ -35,7 +35,7 @@ export const AdminRoutes: Routes = [
           ),
       },
       // Change the default redirect to dashboard
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: '', redirectTo: 'products', pathMatch: 'full' },
     ],
   },
 ];

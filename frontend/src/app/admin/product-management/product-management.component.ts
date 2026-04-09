@@ -1,13 +1,15 @@
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Component, inject, OnInit } from '@angular/core';
 import { ProductService } from '../../products/product.service';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
+import { LoadingSpinnerComponent } from '../../shared/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-product-management',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ConfirmDialogComponent, LoadingSpinnerComponent],
   templateUrl: './product-management.component.html',
   styleUrl: './product-management.component.css',
 })
@@ -15,12 +17,18 @@ export class ProductManagementComponent implements OnInit {
   private http = inject(HttpClient);
   constructor(private productService: ProductService) {}
 
-  // Lists for the dropdown suggestions
+  // UI States
+  isLoading = false;
+  showConfirm = false;
+  confirmMessage = '';
+  
+  // Storage for deletion info
+  pendingDeletion: { level: string; id: number } | null = null;
+
   types: any[] = [];
   categories: any[] = [];
   subCategories: any[] = [];
 
-  // Data model uses strings now
   product = {
     name: '',
     description: '',
@@ -38,10 +46,15 @@ export class ProductManagementComponent implements OnInit {
   }
 
   loadInitialData() {
-    // Fetch existing names to show as suggestions in the datalists
+    this.isLoading = true;
+    // Using forkJoin or sequential loading? 
+    // For simplicity, we'll turn off loader once categories are in
     this.productService.getTypes().subscribe(res => this.types = res);
     this.productService.getCategories().subscribe(res => this.categories = res);
-    this.productService.getSubCategories().subscribe(res => this.subCategories = res);
+    this.productService.getSubCategories().subscribe(res => {
+      this.subCategories = res;
+      setTimeout(() => this.isLoading = false, 600); // Clean pop-in
+    });
   }
 
   onFileSelected(event: any) {
@@ -49,13 +62,12 @@ export class ProductManagementComponent implements OnInit {
   }
 
   submitProduct() {
+    this.isLoading = true;
     const fd = new FormData();
     fd.append('name', this.product.name);
     fd.append('description', this.product.description);
     fd.append('price', this.product.price.toString());
     fd.append('stockQuantity', this.product.stock.toString());
-
-    // Send the NAMES to the backend
     fd.append('typeName', this.product.typeName);
     fd.append('categoryName', this.product.categoryName);
     fd.append('subCategoryName', this.product.subCategoryName);
@@ -66,30 +78,168 @@ export class ProductManagementComponent implements OnInit {
 
     this.http.post('http://localhost:4000/api/products', fd).subscribe({
       next: () => {
-        alert('Product added/updated successfully!');
         this.resetForm();
-        this.loadInitialData(); // Refresh lists with any new names created
+        this.loadInitialData(); // This will trigger the loader again
       },
       error: (err) => {
         console.error('Upload Error:', err);
+        this.isLoading = false;
         alert(err.error?.message || 'Failed to add product');
       },
     });
   }
 
+  // --- Modal Logic ---
+  deleteTaxonomy(level: string, id: number) {
+    this.pendingDeletion = { level, id };
+    this.confirmMessage = `Are you sure? This will delete this ${level} and EVERYTHING under it (Cascade).`;
+    this.showConfirm = true;
+  }
+
+  handleConfirmation(confirmed: boolean) {
+    this.showConfirm = false;
+    if (confirmed && this.pendingDeletion) {
+      this.executeDelete(this.pendingDeletion.level, this.pendingDeletion.id);
+    }
+    this.pendingDeletion = null;
+  }
+
+  private executeDelete(level: string, id: number) {
+    this.isLoading = true;
+    this.http.delete(`http://localhost:4000/api/taxonomy/${level}/${id}`).subscribe({
+      next: () => {
+        this.loadInitialData();
+      },
+      error: (err) => {
+        this.isLoading = false;
+        alert('Delete failed: ' + err.error.message);
+      }
+    });
+  }
+
   resetForm() {
     this.product = {
-      name: '',
-      description: '',
-      price: 0,
-      stock: 0,
-      typeName: '',
-      categoryName: '',
-      subCategoryName: ''
+      name: '', description: '', price: 0, stock: 0,
+      typeName: '', categoryName: '', subCategoryName: ''
     };
     this.selectedFile = null;
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+// import { CommonModule } from '@angular/common';
+// import { FormsModule } from '@angular/forms';
+// import { HttpClient } from '@angular/common/http';
+// import { Component, inject, OnInit } from '@angular/core';
+// import { ProductService } from '../../products/product.service';
+
+// @Component({
+//   selector: 'app-product-management',
+//   standalone: true,
+//   imports: [CommonModule, FormsModule],
+//   templateUrl: './product-management.component.html',
+//   styleUrl: './product-management.component.css',
+// })
+// export class ProductManagementComponent implements OnInit {
+//   private http = inject(HttpClient);
+//   constructor(private productService: ProductService) {}
+
+//   // Lists for the dropdown suggestions
+//   types: any[] = [];
+//   categories: any[] = [];
+//   subCategories: any[] = [];
+
+//   // Data model uses strings now
+//   product = {
+//     name: '',
+//     description: '',
+//     price: 0,
+//     stock: 0,
+//     typeName: '',
+//     categoryName: '',
+//     subCategoryName: ''
+//   };
+
+//   selectedFile: File | null = null;
+
+//   ngOnInit() {
+//     this.loadInitialData();
+//   }
+
+//   loadInitialData() {
+//     // Fetch existing names to show as suggestions in the datalists
+//     this.productService.getTypes().subscribe(res => this.types = res);
+//     this.productService.getCategories().subscribe(res => this.categories = res);
+//     this.productService.getSubCategories().subscribe(res => this.subCategories = res);
+//   }
+
+//   onFileSelected(event: any) {
+//     this.selectedFile = event.target.files[0];
+//   }
+
+//   submitProduct() {
+//     const fd = new FormData();
+//     fd.append('name', this.product.name);
+//     fd.append('description', this.product.description);
+//     fd.append('price', this.product.price.toString());
+//     fd.append('stockQuantity', this.product.stock.toString());
+
+//     // Send the NAMES to the backend
+//     fd.append('typeName', this.product.typeName);
+//     fd.append('categoryName', this.product.categoryName);
+//     fd.append('subCategoryName', this.product.subCategoryName);
+
+//     if (this.selectedFile) {
+//       fd.append('image', this.selectedFile);
+//     }
+
+//     this.http.post('http://localhost:4000/api/products', fd).subscribe({
+//       next: () => {
+//         alert('Product added/updated successfully!');
+//         this.resetForm();
+//         this.loadInitialData(); // Refresh lists with any new names created
+//       },
+//       error: (err) => {
+//         console.error('Upload Error:', err);
+//         alert(err.error?.message || 'Failed to add product');
+//       },
+//     });
+//   }
+
+//   deleteTaxonomy(level: string, id: number) {
+//   if (confirm(`Are you sure? This will delete this ${level} and EVERYTHING under it (Cascade).`)) {
+//     this.http.delete(`http://localhost:4000/api/taxonomy/${level}/${id}`).subscribe({
+//       next: () => {
+//         alert(`${level} deleted!`);
+//         this.loadInitialData(); // Refresh dropdown suggestions
+//       },
+//       error: (err) => alert('Delete failed: ' + err.error.message)
+//     });
+//   }
+// }
+
+//   resetForm() {
+//     this.product = {
+//       name: '',
+//       description: '',
+//       price: 0,
+//       stock: 0,
+//       typeName: '',
+//       categoryName: '',
+//       subCategoryName: ''
+//     };
+//     this.selectedFile = null;
+//   }
+// }
 
 
 

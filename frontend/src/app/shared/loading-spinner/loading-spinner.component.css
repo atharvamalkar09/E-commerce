@@ -1,0 +1,53 @@
+/* 
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--border);
+  border-top-color: var(--green);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+} */
+
+.spinner-container {
+  /* CRITICAL: This takes the spinner out of the document flow */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  
+  /* Centers the spinner in the middle of the screen */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  /* Background tint (optional, makes it look professional) */
+  background: rgba(255, 255, 255, 0.7); 
+  
+  /* Layers it above your table and navbar */
+  z-index: 9999; 
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  /* Ensure variables like --border and --green are defined in your global styles */
+  border: 4px solid #f3f3f3; 
+  border-top: 4px solid #28a745; /* Your --green color */
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

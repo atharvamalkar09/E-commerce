@@ -1,4 +1,6 @@
-<div class="container mt-4">
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<div class="container mt-4" *ngIf="!isLoading">
   <div class="admin-card card p-4 shadow-sm">
     <h2 class="mb-4">Add New Product</h2>
     <form (ngSubmit)="submitProduct()" #productForm="ngForm">
@@ -69,8 +71,152 @@
         Save Product & Structure
       </button>
     </form>
+    
+    <div class="container mt-5">
+      <div class="card p-4 shadow-sm border-danger">
+        <h3 class="text-danger mb-3">Cleanup & Taxonomy Management</h3>
+        <p class="text-muted">Delete old types to clear the database for CircuitStream.</p>
+        
+        <table class="table table-hover">
+          <thead class="table-dark">
+            <tr>
+              <th>Level</th>
+              <th>Name</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let t of types">
+              <td><span class="badge bg-primary">Type</span></td>
+              <td>{{t.name}}</td>
+              <td>
+                <button class="btn btn-outline-danger btn-sm" (click)="deleteTaxonomy('type', t.id)">
+                  Delete & Cascade
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>
+
+<app-confirm-dialog 
+  *ngIf="showConfirm" 
+  [message]="confirmMessage" 
+  (confirmed)="handleConfirmation($event)">
+</app-confirm-dialog>
+
+
+
+
+
+
+
+
+
+<!-- <div class="container mt-4">
+  <div class="admin-card card p-4 shadow-sm">
+    <h2 class="mb-4">Add New Product</h2>
+    <form (ngSubmit)="submitProduct()" #productForm="ngForm">
+      
+      <div class="form-group mb-3">
+        <label class="fw-bold">Product Name</label>
+        <input type="text" class="form-control" [(ngModel)]="product.name" name="name" required placeholder="e.g. Gaming Laptop" />
+      </div>
+
+      <div class="form-group mb-3">
+        <label class="fw-bold">Description</label>
+        <textarea class="form-control" [(ngModel)]="product.description" name="description" rows="3"></textarea>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group mb-3">
+            <label class="fw-bold">Type</label>
+            <input list="typeOptions" class="form-control" [(ngModel)]="product.typeName" name="typeName" required placeholder="Select or type new...">
+            <datalist id="typeOptions">
+              <option *ngFor="let t of types" [value]="t.name"></option>
+            </datalist>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="form-group mb-3">
+            <label class="fw-bold">Category</label>
+            <input list="catOptions" class="form-control" [(ngModel)]="product.categoryName" name="categoryName" required placeholder="Select or type new...">
+            <datalist id="catOptions">
+              <option *ngFor="let c of categories" [value]="c.name"></option>
+            </datalist>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="form-group mb-3">
+            <label class="fw-bold">Sub-Category</label>
+            <input list="subOptions" class="form-control" [(ngModel)]="product.subCategoryName" name="subCategoryName" required placeholder="Select or type new...">
+            <datalist id="subOptions">
+              <option *ngFor="let s of subCategories" [value]="s.name"></option>
+            </datalist>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group mb-3">
+            <label class="fw-bold">Price ($)</label>
+            <input type="number" class="form-control" [(ngModel)]="product.price" name="price" required />
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group mb-3">
+            <label class="fw-bold">Stock</label>
+            <input type="number" class="form-control" [(ngModel)]="product.stock" name="stock" required />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group mb-4">
+        <label class="fw-bold">Product Image</label>
+        <input type="file" class="form-control" (change)="onFileSelected($event)" accept="image/*" />
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 py-2" [disabled]="!productForm.valid">
+        Save Product & Structure
+      </button>
+    </form>
+    
+    <div class="container mt-5">
+  <div class="card p-4 shadow-sm border-danger">
+    <h3 class="text-danger mb-3">Cleanup & Taxonomy Management</h3>
+    <p class="text-muted">Delete old types to clear the database for CircuitStream.</p>
+    
+    <table class="table table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>Level</th>
+          <th>Name</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let t of types">
+          <td><span class="badge bg-primary">Type</span></td>
+          <td>{{t.name}}</td>
+          <td>
+            <button class="btn btn-outline-danger btn-sm" (click)="deleteTaxonomy('type', t.id)">
+              Delete & Cascade
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+  </div>
+</div> -->
 
 
 

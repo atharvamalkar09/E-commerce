@@ -18,7 +18,8 @@ export const routes: Routes = [
   {
     path: "products",
     // For now, let's just point to Login until we build the Product component
-    loadChildren: () => import('./products/products.route').then(m => m.ProductRoutes)
+    loadChildren: () => import('./products/products.route').then(m => m.ProductRoutes),
+    pathMatch: 'prefix'
   },
 
   {
@@ -54,7 +55,8 @@ export const routes: Routes = [
                           .then(m => m.ProfileComponent),
     canActivate: [authGuard] },
   
-  { path: '', redirectTo: 'products', pathMatch: 'full' }
+  { path: '', redirectTo: 'products', pathMatch: 'full' },
+  { path: '**', redirectTo: 'products' }
 ];
 
 

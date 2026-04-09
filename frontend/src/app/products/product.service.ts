@@ -53,6 +53,10 @@ export class ProductService {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
 
+  deleteTaxonomy(level: 'type' | 'category' | 'subcategory', id: number): Observable<any> {
+  return this.http.delete(`${this.apiUrl}/taxonomy/${level}/${id}`);
+}
+
   // --- NEW: Methods to fetch Taxonomy Data ---
   getTypes(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/types`);
@@ -71,9 +75,9 @@ export class ProductService {
     return this.http.post(`${this.baseUrl}`, data);
   }
 
-  deleteTaxonomy(level: string, id: number) {
-    return this.http.delete(`${this.baseUrl}/${level}/${id}`);
-  }
+  // deleteTaxonomy(level: string, id: number) {
+  //   return this.http.delete(`${this.baseUrl}/${level}/${id}`);
+  // }
 
   updateTaxonomy(level: string, id: number, name: string) {
     return this.http.put(`${this.baseUrl}/${level}/${id}`, { name });

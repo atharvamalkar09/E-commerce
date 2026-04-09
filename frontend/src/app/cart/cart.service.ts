@@ -15,11 +15,15 @@ export class CartService {
   constructor(private http: HttpClient) {}
 
   // Load cart from DB on login
-  loadCart() {
-    return this.http.get<any[]>(this.API_URL).subscribe((items) => {
+ loadCart() {
+  this.http.get<any[]>(this.API_URL).subscribe({
+    next: (items) => {
+      console.log('Cart loaded from server:', items);
       this.cartItemsSubject.next(items);
-    });
-  }
+    },
+    error: (err) => console.error('Failed to load cart', err)
+  });
+}
 
   addToCart(product: Product, quantity: number) {
     // Add "/add" to the end of the URL
@@ -51,6 +55,17 @@ removeItem(productId: number) {
 }
 
   clearLocalCart() {
+    console.log('Clearing cart state...');
     this.cartItemsSubject.next([]);
   }
+
+  clearCartAfterOrder() {
+  // 1. Tell the backend to wipe the cart (assuming you have a DELETE /api/cart/clear)
+  return this.http.delete(`${this.API_URL}/clear`).pipe(
+    tap(() => {
+      // 2. Immediately update the local stream to empty
+      this.cartItemsSubject.next([]); 
+    })
+  );
+}
 }

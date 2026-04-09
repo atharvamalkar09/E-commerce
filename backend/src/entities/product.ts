@@ -22,6 +22,6 @@ export class Product {
     @Column({ nullable: true })
     imagePath!: string; 
 
-    @ManyToOne(() => SubCategory, (subCat) => subCat.products)
+    @ManyToOne(() => SubCategory, (subCat) => subCat.products, {onDelete:'CASCADE'})
     subCategory!: SubCategory;
 }
