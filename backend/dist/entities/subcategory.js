@@ -29,7 +29,10 @@ __decorate([
     __metadata("design:type", String)
 ], SubCategory.prototype, "name", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => category_1.Category, (category) => category.subCategories),
+    (0, typeorm_1.ManyToOne)(() => category_1.Category, (cat) => cat.subCategories, {
+        onDelete: 'CASCADE'
+    }) // <--- And this!
+    ,
     __metadata("design:type", category_1.Category)
 ], SubCategory.prototype, "category", void 0);
 __decorate([

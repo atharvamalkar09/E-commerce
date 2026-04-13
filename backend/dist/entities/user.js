@@ -35,18 +35,15 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "email", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ select: false }) // Security: prevents password leak in standard queries
-    ,
+    (0, typeorm_1.Column)({ select: false }),
     __metadata("design:type", String)
 ], User.prototype, "passwordHash", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ default: 'customer' }) // Roles: 'admin' or 'customer'
-    ,
+    (0, typeorm_1.Column)({ default: 'customer' }),
     __metadata("design:type", String)
 ], User.prototype, "role", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ default: false }) // Requirement 5.3: Immediate locking
-    ,
+    (0, typeorm_1.Column)({ default: false }),
     __metadata("design:type", Boolean)
 ], User.prototype, "isLocked", void 0);
 __decorate([

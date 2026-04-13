@@ -15,4 +15,7 @@ router.post("/checkout", cart_orderController_1.handleCheckout);
 router.get("/my-orders", cart_orderController_1.getMyOrders);
 router.patch("/update", cart_orderController_1.updateCart);
 router.delete("/remove/:productId", cart_orderController_1.handleRemoveFromCart);
+// Example in your routes file:
+router.get("/admin/all", auth_1.protect, cart_orderController_1.handleGetAllOrdersAdmin);
+router.patch("/admin/order/:id/status", auth_1.protect, cart_orderController_1.handleUpdateStatus);
 exports.default = router;

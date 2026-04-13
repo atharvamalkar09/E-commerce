@@ -1,112 +1,56 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<div class="product-container" *ngIf="product && !isLoading">
-  <div class="image-section">
-    <img [src]="getImageUrl(product.imagePath)" [alt]="product.name" (error)="onImageError($event)" class="main-image" />
-
-    <div *ngIf="isEditing" class="edit-image-upload mt-2">
-      <label class="fw-bold">Change Product Image:</label>
-      <input type="file" (change)="onFileSelected($event)" accept="image/*" class="form-control" />
-    </div>
-  </div>
-
-  <div class="info-section">
-    <div *ngIf="!isEditing">
-      <h1>{{ product.name }}</h1>
-      <p class="description">{{ product.description }}</p>
-      <h2 class="price">Price: ${{ product.price }}</h2>
-      <p class="stock">
-        Status:
-        <span [class.text-danger]="product.stockQuantity <= 0">
-          {{ product.stockQuantity > 0 ? "In Stock (" + product.stockQuantity + ")" : "Out of Stock" }}
-        </span>
-      </p>
-    </div>
-
-    <div *ngIf="isEditing" class="edit-form">
-      <label>Name:</label>
-      <input type="text" [(ngModel)]="product.name" class="form-control mb-2" />
-
-      <label>Description:</label>
-      <textarea [(ngModel)]="product.description" class="form-control mb-2"></textarea>
-
-      <label>Price ($):</label>
-      <input type="number" [(ngModel)]="product.price" class="form-control mb-2" />
-
-      <label>Stock Quantity:</label>
-      <input type="number" [(ngModel)]="product.stockQuantity" class="form-control mb-2" />
-    </div>
-
-    <hr />
-
-    <div class="actions">
-      <div *ngIf="authService.currentUserValue?.role !== 'admin'; else adminControls">
-        <div class="cart-controls mb-2" *ngIf="product.stockQuantity > 0">
-          <button (click)="addToCart()" class="btn btn-primary w-100">Add to Cart</button>
-        </div>
-        <button (click)="shareProduct()" class="btn btn-outline-secondary w-100">
-          <i class="fas fa-share"></i> Share Product
-        </button>
-      </div>
-
-      <ng-template #adminControls>
-        <div class="admin-buttons d-flex gap-2">
-          <button *ngIf="!isEditing" (click)="toggleEdit()" class="btn btn-secondary">Edit</button>
-          <button *ngIf="!isEditing" (click)="confirmDelete()" class="btn btn-danger">Delete</button>
-
-          <div *ngIf="isEditing" class="edit-actions d-flex gap-2 w-100">
-            <button (click)="saveProduct()" class="btn btn-success flex-grow-1">Save</button>
-            <button (click)="toggleEdit()" class="btn btn-outline-danger">Cancel</button>
-          </div>
-        </div>
-      </ng-template>
-    </div>
-  </div>
-</div>
-
-<app-confirm-dialog 
-  *ngIf="showConfirm" 
-  [message]="confirmMessage" 
-  (confirmed)="handleConfirmation($event)">
-</app-confirm-dialog>
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- <p>product-details works!</p>
-
-<div class="product-container" *ngIf="product">
-  <div class="image-section">
+<div class="box" *ngIf="product && !isLoading">
+  <div class="left">
     <img
       [src]="getImageUrl(product.imagePath)"
       [alt]="product.name"
       (error)="onImageError($event)"
-      class="main-image"
+      class="img"
     />
 
-    <div *ngIf="isEditing" class="edit-image-upload">
-      <label>Change Product Image:</label>
-      <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+    <div *ngIf="isEditing" class="upload-area">
+      <label class="bold">Change Product Image:</label>
+      <input
+        type="file"
+        (change)="onFileSelected($event)"
+        accept="image/*"
+        class="input"
+      />
     </div>
   </div>
 
-  <div class="info-section">
+  <div class="right">
     <div *ngIf="!isEditing">
-      <h1>{{ product.name }}</h1>
-      <p class="description">{{ product.description }}</p>
+      <p class="path">
+        Home > {{ product.subCategory?.category?.type?.name }} >
+        {{ product.subCategory?.category?.name }}
+      </p>
+      <br />
+      <h1 class="title">{{ product.name }}</h1>
+      <i class="fa-solid fa-star"></i>
+      <i class="fa-solid fa-star"></i>
+      <i class="fa-solid fa-star"></i>
+      <i class="fa-solid fa-star"></i>
+      <i class="fa-solid fa-star"></i>
+      (5.0)
+      <span>(100 reviews)</span>
+      <br />
+      <br />
+      <p class="text">{{ product.description }}</p>
+      <p class="text">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum cumque
+        aperiam corporis est. Cupiditate odit quos aperiam deserunt. Ipsum
+        laboriosam veritatis maiores quam ipsam fugit? Aliquid quaerat ducimus
+        voluptate aspernatur. Lorem ipsum dolor sit amet consectetur adipisicing
+        elit. Voluptatem possimus repellat hic ut atque, saepe suscipit sapiente
+        architecto! Aut aliquam explicabo modi, at vitae facere doloremque
+        laboriosam aliquid perspiciatis alias.
+      </p>
       <h2 class="price">Price: ${{ product.price }}</h2>
-
-      <p class="stock">
+      <p class="status">
         Status:
-        <span [class.text-danger]="product.stockQuantity <= 0">
+        <span [class.sold-out]="product.stockQuantity <= 0">
           {{
             product.stockQuantity > 0
               ? "In Stock (" + product.stockQuantity + ")"
@@ -116,71 +60,80 @@
       </p>
     </div>
 
-    <div *ngIf="isEditing" class="edit-form">
+    <div *ngIf="isEditing" class="form">
       <label>Name:</label>
-      <input type="text" [(ngModel)]="product.name" class="form-control mb-2" />
+      <input type="text" [(ngModel)]="product.name" class="input gap" />
 
       <label>Description:</label>
       <textarea
         [(ngModel)]="product.description"
-        class="form-control mb-2"
+        class="input gap"
       ></textarea>
 
       <label>Price ($):</label>
       <input
         type="number"
         [(ngModel)]="product.price"
-        class="form-control mb-2"
+        class="input gap"
       />
 
       <label>Stock Quantity:</label>
       <input
         type="number"
         [(ngModel)]="product.stockQuantity"
-        class="form-control mb-2"
+        class="input gap"
       />
     </div>
 
-    <hr />
+    <hr class="line" />
 
-    <div class="actions">
-      <div
-        *ngIf="
-          authService.currentUserValue?.role !== 'admin';
-          else adminControls
-        "
-      >
-        <div class="cart-controls" *ngIf="product.stockQuantity > 0">
-          <button (click)="addToCart()" class="btn-primary">Add to Cart</button>
-        </div>
-        <button (click)="shareProduct()" class="btn-outline">
+    <div class="btns">
+      <div *ngIf="authService.currentUserValue?.role !== 'admin'; else adminBtns" class="user-btns">
+        <button (click)="addToCart()" class="btn primary" *ngIf="product.stockQuantity > 0">
+          Add to Cart
+          <i class="fa-solid fa-cart-plus"></i>
+        </button>
+        <button
+          (click)="shareProduct()"
+          class="btn outline"
+        >
           Share Product
         </button>
       </div>
 
-      <ng-template #adminControls>
-        <div class="admin-buttons">
-          <button
-            *ngIf="!isEditing"
-            (click)="toggleEdit()"
-            class="btn-secondary"
-          >
-            Edit Product
-          </button>
-
-          <button (click)="confirmDelete()" class="btn-danger">
-            Delete Product
-          </button>
-
-          <div *ngIf="isEditing" class="edit-actions">
-            <button (click)="saveProduct()" class="btn-success">
-              Save Changes
+      <ng-template #adminBtns>
+        <div class="admin">
+          <div *ngIf="!isEditing" class="stack">
+            <button
+              (click)="toggleEdit()"
+              class="btn primary">
+              Edit
             </button>
-            <button (click)="toggleEdit()" class="btn-danger">Cancel</button>
+            <button
+              (click)="confirmDelete()"
+              class="btn danger">
+              Delete
+            </button>
+          </div>
+
+          <div *ngIf="isEditing" class="group">
+            <button (click)="saveProduct()" class="btn success">
+              Save
+            </button>
+            <button (click)="toggleEdit()" class="btn outline">
+              Cancel
+            </button>
           </div>
         </div>
       </ng-template>
     </div>
   </div>
-</div> -->
+</div>
+
+<app-confirm-dialog
+  *ngIf="showConfirm"
+  [message]="confirmMessage"
+  (confirmed)="handleConfirmation($event)"
+>
+</app-confirm-dialog>
 

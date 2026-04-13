@@ -1,4 +1,4 @@
-<div class="profile-container" *ngIf="user.name">
+<div class="profile-container" *ngIf="user">
   <h1>Account Settings</h1>
 
   <p *ngIf="message" [ngClass]="{'success-msg': !isError, 'error-msg': isError}">

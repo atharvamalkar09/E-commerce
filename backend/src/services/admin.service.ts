@@ -1,4 +1,3 @@
-// src/services/admin.service.ts
 import { AppDataSource } from "../data.source";
 import { User } from "../entities/user";
 import { Order } from "../entities/order";
@@ -22,12 +21,10 @@ export const toggleLock = async (userId: number, isLocked: boolean) => {
     user.isLocked = isLocked;
     await userRepo.save(user);
 
-    // Requirement 5.3: Immediate Effect
     if (isLocked) {
-        // Iterate through the in-memory session map
         for (let [token, session] of sessionStore.entries()) {
             if (session.userId === userId) {
-                sessionStore.delete(token); // Kick the user out instantly
+                sessionStore.delete(token);
                 console.log(`Kicked session token: ${token}`);
             }
         }
@@ -42,11 +39,6 @@ export const getOrders = async () => {
     });
 };
 
-/**
- * Call this once during app startup or via a hidden route 
- * to ensure your hardcoded admin exists.
- */
-// src/services/admin.service.ts
 
 export const ensureAdminExists = async () => {
     const adminEmail = "admin@system.com";
@@ -59,12 +51,11 @@ export const ensureAdminExists = async () => {
             email: adminEmail,
             passwordHash: hashedPassword,
             role: "admin",
-            isLocked: false // SQLite stores this as 0
+            isLocked: false
         });
         await userRepo.save(admin);
         console.log("Admin Created: admin@system.com");
     } else {
-        // FORCE UNLOCK: If admin exists but is locked, unlock them now
         if (existingAdmin.isLocked) {
             existingAdmin.isLocked = false;
             await userRepo.save(existingAdmin);

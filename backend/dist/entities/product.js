@@ -47,7 +47,7 @@ __decorate([
     __metadata("design:type", String)
 ], Product.prototype, "imagePath", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => subcategory_1.SubCategory, (subCat) => subCat.products),
+    (0, typeorm_1.ManyToOne)(() => subcategory_1.SubCategory, (subCat) => subCat.products, { onDelete: 'CASCADE' }),
     __metadata("design:type", subcategory_1.SubCategory)
 ], Product.prototype, "subCategory", void 0);
 exports.Product = Product = __decorate([

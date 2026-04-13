@@ -35,7 +35,7 @@ export class AuthService {
     return this.http.post<AuthResponse>(`${this.apiUrl}/register`, {
       name,
       email,
-      password,
+      passwordHash: password,
     });
   }
 
@@ -48,7 +48,6 @@ export class AuthService {
   checkSession(): Observable<User | null> {
     return this.http.get<AuthMeResponse>(`${this.apiUrl}/me`).pipe(
       map((res) => {
-        // res IS the user object now, not res.session
         console.log('Data from Backend:', res);
         return res as unknown as User;
       }),
@@ -62,27 +61,6 @@ export class AuthService {
     );
   }
 
-  // checkSession():Observable<User | null>{
-  //   return this.http.get<AuthMeResponse>(`${this.apiUrl}/me`, { withCredentials: true }).pipe(
-  //   // tap(user => {
-  //   //   console.log("Session restored:", user);
-  //   //   this.userSub.next(user);
-  //   // }),
-  //   tap((res:AuthMeResponse) => {
-  //     // If your backend returns { session: { role: 'customer' } }
-  //     // We extract the inner 'session' object so the Navbar sees 'role' directly
-  //     if (res && res.session) {
-  //       console.log("Session data extracted:", res.session);
-  //       this.userSub.next(res.session);
-  //     }
-  //   }),
-  //   catchError(() => {
-  //     // If 401 or error, just set user to null (Guest mode)
-  //     this.userSub.next(null);
-  //     return of(null);
-  //   })
-  // );
-  //}
 
   logout(): Observable<any> {
     return this.http.post(`${this.apiUrl}/logout`, {}).pipe(
@@ -101,11 +79,8 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/reset-password`, data);
   }
 
-  // auth.service.ts
-
-  // ... inside the class
   clearLocalSession() {
-    localStorage.removeItem('currentUser'); // Or whatever key you use
-    this.userSub.next(null); // This triggers the UI toggle
+    localStorage.removeItem('currentUser'); 
+    this.userSub.next(null);
   }
 }

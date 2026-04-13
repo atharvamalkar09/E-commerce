@@ -12,4 +12,11 @@ router.post("/logout", authController_1.logout);
 router.post("/forgot-password", authController_1.forgotPassword);
 router.post("/reset-password", authController_1.resetpassword);
 router.get("/me", auth_1.protect, authController_1.getUser);
+// router.get("/me", (req, res) => {
+//     // Assuming your 'protect' middleware or session logic attaches user to req
+//     if (req.session && req.session.user) {
+//         return res.json(req.session.user);
+//     }
+//     res.status(401).json({ message: "Not authenticated" });
+// });
 exports.default = router;

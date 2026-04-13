@@ -1,4 +1,4 @@
-// src/controllers/admin.controller.ts
+
 import { Request, Response } from "express";
 import * as adminService from "../services/admin.service";
 import { createItem, deleteItem } from "../services/taxonomy.service";
@@ -13,13 +13,12 @@ export const addType = async (req: Request, res: Response) => {
 };
 
 export const addCategory = async (req: Request, res: Response) => {
-    // Expects { "name": "...", "type": { "id": 1 } }
     const item = await createItem(Category, req.body);
     res.status(201).json(item);
 };
 
 export const addSubCategory = async (req: Request, res: Response) => {
-    // Expects { "name": "...", "category": { "id": 1 } }
+
     const item = await createItem(SubCategory, req.body);
     res.status(201).json(item);
 };

@@ -1,51 +1,53 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
+import { LoadingSpinnerComponent } from '../../shared/loading-spinner/loading-spinner.component';
+
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule,CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink, ConfirmDialogComponent,FormsModule,LoadingSpinnerComponent],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
 export class RegisterComponent implements OnInit {
 
   registerForm!: FormGroup;
-  errMessage:string = "";
+  errMessage: string = "";
   isLoading: boolean = false;
+  showDialog: boolean = false;
+  dialogMessage: string = '';
   
-  constructor(private authService: AuthService, private fb: FormBuilder, private router: Router){}
-
+  constructor(private authService: AuthService, private fb: FormBuilder, private router: Router) {}
 
   ngOnInit(): void {
-  const namePattern = /^[^\s]+(\s+[^\s]+)*$/;
-  const passwordPattern = /^(?!\s*$).+/;
+    const namePattern = /^[^\s]+(\s+[^\s]+)*$/;
+    const passwordPattern = /^(?!\s*$).+/;
 
-  this.registerForm = this.fb.group({
-    // Correct Order: [initialValue, [syncValidators], [asyncValidators]]
-    name: ['', [
-      Validators.required, 
-      Validators.minLength(3), 
-      Validators.pattern(namePattern)
-    ]],
-    email: ['', [
-      Validators.required, 
-      Validators.email, 
-      Validators.pattern(namePattern)
-    ]],
-    password: ['', [
-      Validators.required, 
-      Validators.minLength(6), 
-      Validators.pattern(passwordPattern)
-    ]],
-    confirmPassword: ['', [Validators.required]]
-  }, { 
-    // This is the options object for the entire group
-    validators: [this.confirmpassword]    
-  });
-}
+    this.registerForm = this.fb.group({
+      name: ['', [
+        Validators.required, 
+        Validators.minLength(3), 
+        Validators.pattern(namePattern)
+      ]],
+      email: ['', [
+        Validators.required, 
+        Validators.email, 
+        Validators.pattern(namePattern)
+      ]],
+      password: ['', [
+        Validators.required, 
+        Validators.minLength(6), 
+        Validators.pattern(passwordPattern)
+      ]],
+      confirmPassword: ['', [Validators.required]]
+    }, { 
+      validators: [this.confirmpassword]    
+    });
+  }
 
   confirmpassword(cp: FormGroup) {
     const password = cp.get('password')?.value;
@@ -53,7 +55,7 @@ export class RegisterComponent implements OnInit {
     return password === confirm ? null : { mismatch: true };
   }
 
- onSubmit() {
+  onSubmit() {
     if (this.registerForm.valid) {
       this.isLoading = true;
       const { name, email, password } = this.registerForm.value;
@@ -61,9 +63,9 @@ export class RegisterComponent implements OnInit {
       this.authService.register(name, email, password).subscribe({
         next: (response) => {
           this.isLoading = false;
-          console.log('User registered:', response.user);
-          alert(response.message); // "Registration successful" from backend
-          this.router.navigate(['/auth/login']);
+          console.log('User registered:', response);
+          this.dialogMessage = response.message || 'User registered successfully!';
+          this.showDialog = true;
         },
         error: (err) => {
           this.isLoading = false;
@@ -73,8 +75,10 @@ export class RegisterComponent implements OnInit {
     }
   }
 
-
-
-
-
+  onDialogConfirm(confirmed: boolean) {
+    this.showDialog = false;
+    if (confirmed) {
+      this.router.navigate(['/auth/login']);
+    }
+  }
 }

@@ -4,14 +4,6 @@ export const AdminRoutes: Routes = [
   {
     path: '',
     children: [
-      // Add this new route
-      // {
-      //   path: 'dashboard',
-      //   loadComponent: () =>
-      //     import('./dashboard/dashboard.component').then(
-      //       (m) => m.DashboardComponent,
-      //     ),
-      // },
       {
         path: 'products',
         loadComponent: () =>
@@ -34,7 +26,6 @@ export const AdminRoutes: Routes = [
             (m) => m.OrderManagementComponent,
           ),
       },
-      // Change the default redirect to dashboard
       { path: '', redirectTo: 'products', pathMatch: 'full' },
     ],
   },

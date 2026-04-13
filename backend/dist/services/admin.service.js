@@ -58,6 +58,7 @@ const toggleLock = async (userId, isLocked) => {
         for (let [token, session] of index_1.sessionStore.entries()) {
             if (session.userId === userId) {
                 index_1.sessionStore.delete(token); // Kick the user out instantly
+                console.log(`Kicked session token: ${token}`);
             }
         }
     }
@@ -96,32 +97,8 @@ const ensureAdminExists = async () => {
         if (existingAdmin.isLocked) {
             existingAdmin.isLocked = false;
             await userRepo.save(existingAdmin);
-            console.log("🔓 Admin account was locked. Force-unlocked successfully.");
+            console.log("Admin account was locked. Force-unlocked successfully.");
         }
     }
 };
 exports.ensureAdminExists = ensureAdminExists;
-// export const seedTaxonomy = async () => {
-//     const typeRepo = AppDataSource.getRepository(Type);
-//     const catRepo = AppDataSource.getRepository(Category);
-//     const subRepo = AppDataSource.getRepository(SubCategory);
-//     // 1. Ensure Type exists
-//     let electronics = await typeRepo.findOneBy({ name: "Electronics" });
-//     if (!electronics) {
-//         electronics = typeRepo.create({ name: "Electronics" });
-//         await typeRepo.save(electronics);
-//     }
-//     // 2. Ensure Category exists
-//     let computers = await catRepo.findOneBy({ name: "Computers" });
-//     if (!computers) {
-//         computers = catRepo.create({ name: "Computers", type: electronics });
-//         await catRepo.save(computers);
-//     }
-//     // 3. Ensure SubCategory exists
-//     let laptops = await subRepo.findOneBy({ name: "Laptops" });
-//     if (!laptops) {
-//         laptops = subRepo.create({ name: "Laptops", category: computers });
-//         await subRepo.save(laptops);
-//         console.log("Taxonomy Initialized: Electronics > Computers > Laptops (ID: 1)");
-//     }
-// };

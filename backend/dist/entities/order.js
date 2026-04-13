@@ -18,6 +18,7 @@ let Order = class Order {
     orderDate;
     paymentMethod;
     totalAmount;
+    status;
     user;
     items;
 };
@@ -38,6 +39,10 @@ __decorate([
     (0, typeorm_1.Column)("decimal", { precision: 10, scale: 2 }),
     __metadata("design:type", Number)
 ], Order.prototype, "totalAmount", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: "varchar", default: "Pending" }),
+    __metadata("design:type", String)
+], Order.prototype, "status", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => user_1.User, (user) => user.orders),
     __metadata("design:type", user_1.User)

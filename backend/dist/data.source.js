@@ -40,9 +40,9 @@ const dotenv = __importStar(require("dotenv"));
 dotenv.config();
 exports.AppDataSource = new typeorm_1.DataSource({
     type: "better-sqlite3",
-    database: process.env.DB_PATH || "database.sqlite",
-    synchronize: true,
+    database: "database.sqlite",
+    synchronize: false,
     logging: true,
     entities: ["src/entities/*.ts"],
-    migrations: ["src/migrations/*.ts"],
+    migrations: [__dirname, "src/migrations/*.ts"],
 });

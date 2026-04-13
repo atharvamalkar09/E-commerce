@@ -38,7 +38,7 @@ __decorate([
     __metadata("design:type", order_1.Order)
 ], OrderItem.prototype, "order", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => product_1.Product),
+    (0, typeorm_1.ManyToOne)(() => product_1.Product, { onDelete: 'CASCADE' }),
     __metadata("design:type", product_1.Product)
 ], OrderItem.prototype, "product", void 0);
 exports.OrderItem = OrderItem = __decorate([

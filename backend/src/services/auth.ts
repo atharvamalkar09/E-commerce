@@ -1,4 +1,3 @@
-// src/services/auth.service.ts
 import { AppDataSource } from "../data.source";
 import { PasswordReset } from "../entities/passwordReset";
 import { User } from "../entities/user";
@@ -8,20 +7,19 @@ import jwt from "jsonwebtoken";
 
 const JWT_SECRET = "your_super_secret_key";
 
-export const registerUser = async (userData: User) => {        // any
+export const registerUser = async (userData: User): Promise<User> => { 
 
     const userRepository = AppDataSource.getRepository(User);
 
     const existingUser = await userRepository.findOneBy({ email: userData.email });
 
-    // if (existingUser) throw new Error("Email taken");
 
     if(existingUser){
         console.log("Email already registered");
         throw new Error("Email already present");
     }
 
-    const hashedPassword = await bcrypt.hash(userData.passwordHash, 10);    // password
+    const hashedPassword = await bcrypt.hash(userData.passwordHash, 10);
 
     const user = userRepository.create({
         name: userData.name,
@@ -32,18 +30,23 @@ export const registerUser = async (userData: User) => {        // any
     return await userRepository.save(user);
 };
 
-export const validateLogin = async (email: string, password: any) => {
+export const validateLogin = async (email: string, password: any): Promise<any> => {
     const userRepository = AppDataSource.getRepository(User);
     const user = await userRepository.findOne({
         where: { email },
         select: ["id", "name", "email", "passwordHash", "role", "isLocked"]
     });
-    const passCompare   = (await bcrypt.compare(password, user!.passwordHash))
 
-    if (!user || !passCompare) {                 // (await bcrypt.compare(password, user!.passwordHash))
-        console.log("Not same");                 // console
+
+    if (!user) {      
         throw new Error("Invalid credentials!");
     }
+
+    const passCompare   = (await bcrypt.compare(password, user!.passwordHash));
+
+     if (!passCompare){
+        throw new Error("Invalid credentials!");
+     }
 
     if (user.isLocked) {
         throw new Error("Account is locked");
@@ -63,9 +66,12 @@ export const validateLogin = async (email: string, password: any) => {
 const passwordResetRepo = AppDataSource.getRepository(PasswordReset);
 const userRepo = AppDataSource.getRepository(User);
 
-export const generateResetCode = async (email: string) => {
+export const generateResetCode = async (email: string): Promise<string> => {
     const user = await userRepo.findOneBy({ email });
-    if (!user) throw new Error("User not found");
+
+    if (!user) {
+        throw new Error("User not found");
+    }
 
     const tempCode = Math.floor(100000 + Math.random() * 900000).toString();
     
@@ -79,28 +85,27 @@ export const generateResetCode = async (email: string) => {
     });
 
     await passwordResetRepo.save(resetEntry);
-    return tempCode; // Return to controller to display "on screen"
+    return tempCode;
 };
 
-export const resetPassword = async (email: string, code: string, newPassword: any) => {
+export const resetPassword = async (email: string, code: string, newPassword: any) : Promise<boolean> => {
     const resetRequest = await passwordResetRepo.findOne({
         where: { tempCode: code, user: { email } },
         relations: ["user"]
     });
 
-    if (!resetRequest) throw new Error("Invalid code or email");
+    if (!resetRequest) {
+        throw new Error("Invalid code or email");
+    }
     
-    // Requirement 5.5: Check expiry
     if (new Date() > resetRequest.expiresAt) {
         throw new Error("Code has expired");
     }
 
-    // Update user password
     const user = resetRequest.user;
     user.passwordHash = await bcrypt.hash(newPassword, 10);
     await userRepo.save(user);
 
-    // Clean up: delete the used reset code
     await passwordResetRepo.remove(resetRequest);
     return true;
 };

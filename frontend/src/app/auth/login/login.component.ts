@@ -3,19 +3,22 @@ import { AuthService } from '../auth.service';
 import { Router, RouterModule } from '@angular/router';
 import { AuthResponse } from '../../models/user.model';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgModel } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../shared/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, LoadingSpinnerComponent],
+  imports: [CommonModule, RouterModule, LoadingSpinnerComponent,FormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  private authService = inject(AuthService);
-  private router = inject(Router);
+
+  // private authService = inject(AuthService);
+  // private router = inject(Router);
+
+  constructor(private authService: AuthService, private router: Router){}
 
   credentials = {
     email: "",
@@ -23,15 +26,16 @@ export class LoginComponent {
   };
   
   errMessage: string = "";
-  isLoading: boolean = false; // Control the spinner
-
-  login() {
+  isLoading: boolean = false;
+  login(loginForm: any) {
     this.errMessage = "";
-    this.isLoading = true; // Start loading immediately
-
+    if (loginForm.invalid) {
+      this.errMessage = "Please fill in all required fields correctly.";
+      return;
+    }
+    this.isLoading = true;
     this.authService.login(this.credentials.email, this.credentials.password).subscribe({
       next: (res: AuthResponse) => {
-        // We keep the spinner visible for a split second for a smooth transition
         setTimeout(() => {
           this.isLoading = false;
           const loggedUser = res.user;
@@ -44,62 +48,9 @@ export class LoginComponent {
         }, 800);
       },
       error: (err) => {
-        this.isLoading = false; // Stop loading on error
-        this.errMessage = err.error?.message || "An error occurred during login";
+        this.isLoading = false;
+        this.errMessage = err.error?.message || "Login failed. Please check your credentials and try again.";
       }
     });
   }
 }
-
-
-
-
-
-
-
-
-
-
-// import { Component, OnInit } from '@angular/core';
-// import { AuthService } from '../auth.service';
-// import { Router, RouterModule } from '@angular/router';
-// import { AuthResponse } from '../../models/user.model';
-// import { CommonModule } from '@angular/common';
-// import { FormsModule } from '@angular/forms';
-
-// @Component({
-//   selector: 'app-login',
-//   imports: [CommonModule,FormsModule,RouterModule],
-//   templateUrl: './login.component.html',
-//   styleUrl: './login.component.css'
-// })
-// export class LoginComponent {
-
-//   credentials = {
-//     email: "",
-//     password:""
-//   }
-//   errMessage:string = "";
-
-//   constructor(private authService:AuthService, private router: Router){}
-
-//   login(){
-//     this.errMessage = "";
-//     this.authService.login(this.credentials.email, this.credentials.password).subscribe({
-//       next:(res: AuthResponse)=>{
-//         const loggedUser = res.user;
-
-//         if(loggedUser.role === "admin"){
-//           this.router.navigate(["/products"]);   ///admin/dashboard
-//         }
-//         else{
-//           this.router.navigate(["/products"]);
-//         }
-//       },
-//       error: (err) => {
-//       this.errMessage = err.error?.message || "An error occurred during login";
-//     }
-//     })
-//   }
-
-// }

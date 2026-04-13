@@ -1,50 +1,63 @@
-<!-- <p>register works!</p> -->
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<div class="auth-card" style="max-width: 450px; margin: 60px auto; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #eee;">
-  <h2 style="text-align: center; margin-bottom: 25px; color: #333;">Create an Account</h2>
-  
-  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-    <div style="margin-bottom: 15px;">
-      <label style="font-weight: 600; display: block; margin-bottom: 5px;">Full Name</label>
-      <input type="text" formControlName="name" placeholder="John Doe" 
-             style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
-      <div *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched" style="color: #dc3545; font-size: 12px; margin-top: 5px;">
-        Name must be at least 3 characters.
+<div class="auth-page">
+  <div class="auth-card">
+    <h2>Create Account</h2>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="field">
+        <label>Full Name</label>
+        <input 
+          type="text" 
+          formControlName="name" 
+          placeholder="John Doe" />
+        <p class="field-err" *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched">
+          Name must be at least 3 characters.
+        </p>
       </div>
-    </div>
 
-    <div style="margin-bottom: 15px;">
-      <label style="font-weight: 600; display: block; margin-bottom: 5px;">Email Address</label>
-      <input type="email" formControlName="email" placeholder="email@example.com"
-             style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
-    </div>
-
-    <div style="margin-bottom: 15px;">
-      <label style="font-weight: 600; display: block; margin-bottom: 5px;">Password</label>
-      <input type="password" formControlName="password" 
-             style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
-    </div>
-
-    <div style="margin-bottom: 20px;">
-      <label style="font-weight: 600; display: block; margin-bottom: 5px;">Confirm Password</label>
-      <input type="password" formControlName="confirmPassword" 
-             style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
-      <div *ngIf="registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.touched" style="color: #dc3545; font-size: 12px; margin-top: 5px;">
-        Passwords do not match.
+      <div class="field">
+        <label>Email Address</label>
+        <input
+          type="email"
+          formControlName="email"
+          placeholder="email@example.com" />
       </div>
-    </div>
 
-    <div *ngIf="errMessage" style="background: #f8d7da; color: #721c24; padding: 10px; border-radius: 6px; margin-bottom: 15px; font-size: 14px;">
-      {{ errMessage }}
-    </div>
+      <div class="field">
+        <label>Password</label>
+        <input
+          type="password"
+          formControlName="password"
+          placeholder="••••••••" />
+      </div>
 
-    <button type="submit" [disabled]="registerForm.invalid || isLoading" 
-            style="width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: 600;">
-      {{ isLoading ? 'Registering...' : 'Sign Up' }}
-    </button>
+      <div class="field">
+        <label>Confirm Password</label>
+        <input
+          type="password"
+          formControlName="confirmPassword"
+          placeholder="••••••••" />
+        <p class="field-err" *ngIf="registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.touched">
+          Passwords do not match.
+        </p>
+      </div>
 
-    <div style="text-align: center; margin-top: 20px; font-size: 14px;">
-      Already have an account? <a href="/auth/login">Login</a>
+      <div class="err-box" *ngIf="errMessage">{{ errMessage }}</div>
+
+      <button type="submit" class="btn-submit" [disabled]="registerForm.invalid || isLoading">
+        {{ isLoading ? "Registering..." : "Sign Up" }}
+      </button>
+    </form>
+
+    <app-confirm-dialog
+      *ngIf="showDialog"
+      [message]="dialogMessage"
+      (confirmed)="onDialogConfirm($event)">
+    </app-confirm-dialog>
+
+    <div class="auth-links">
+      <p>Already have an account? <a routerLink="/auth/login">Login</a></p>
     </div>
-  </form>
+  </div>
 </div>

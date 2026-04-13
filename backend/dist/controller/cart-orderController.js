@@ -33,7 +33,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleViewCart = exports.handleRemoveFromCart = exports.updateCart = exports.getMyOrders = exports.handleCheckout = exports.handleAddToCart = void 0;
+exports.handleUpdateStatus = exports.handleGetAllOrdersAdmin = exports.handleViewCart = exports.handleRemoveFromCart = exports.updateCart = exports.getMyOrders = exports.handleCheckout = exports.handleAddToCart = void 0;
 const orderService = __importStar(require("../services/order.service"));
 const cart_services_1 = require("../services/cart.services");
 const handleAddToCart = async (req, res) => {
@@ -80,10 +80,20 @@ const updateCart = async (req, res) => {
     }
 };
 exports.updateCart = updateCart;
+// export const handleRemoveFromCart = async (req: AuthRequest, res: Response) => {
+//     try {
+//         const { productId } = req.params; 
+//         await removeFromCart(req.user!.id, Number(productId));
+//         res.json({ message: "Item removed from cart" });
+//     } catch (error: any) {
+//         res.status(400).json({ message: error.message });
+//     }
+// };
 const handleRemoveFromCart = async (req, res) => {
     try {
-        const { productId } = req.params;
-        await (0, cart_services_1.removeFromCart)(req.user.id, Number(productId));
+        const { productId } = req.params; // Must match the name in the route ":productId"
+        const userId = req.user.id;
+        await (0, cart_services_1.removeFromCart)(userId, Number(productId));
         res.json({ message: "Item removed from cart" });
     }
     catch (error) {
@@ -103,3 +113,26 @@ const handleViewCart = async (req, res) => {
     }
 };
 exports.handleViewCart = handleViewCart;
+const handleGetAllOrdersAdmin = async (req, res) => {
+    try {
+        // You should have an admin check here or in your middleware
+        const orders = await orderService.getAllOrdersAdmin();
+        res.json(orders);
+    }
+    catch (error) {
+        res.status(500).json({ message: "Error fetching all orders" });
+    }
+};
+exports.handleGetAllOrdersAdmin = handleGetAllOrdersAdmin;
+const handleUpdateStatus = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+        await orderService.updateOrderStatus(Number(id), status);
+        res.json({ message: "Order status updated successfully" });
+    }
+    catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+exports.handleUpdateStatus = handleUpdateStatus;

@@ -1,8 +1,5 @@
-// src/services/taxonomy.service.ts
 import { AppDataSource } from "../data.source";
-import { Type } from "../entities/type";
-import { Category } from "../entities/category";
-import { SubCategory } from "../entities/subcategory";
+
 
 export const createItem = async (entity: any, data: any) => {
     const repo = AppDataSource.getRepository(entity);

@@ -25,7 +25,7 @@ exports.addToCart = addToCart;
 const getCartByUser = async (userId) => {
     return await cartRepo.find({
         where: { user: { id: userId } },
-        relations: ["product"]
+        relations: ["product"] // CRITICAL: This allows item.product.name to work
     });
 };
 exports.getCartByUser = getCartByUser;

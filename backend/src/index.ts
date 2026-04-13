@@ -16,7 +16,6 @@ import taxonomyRoutes from "./routes/taxonomy.routes";
 export const sessionStore = new Map<string, any>();
 const app = express();
 
-// app.use('/ProductImages', express.static(path.join(__dirname, '../ProductImages')));
 
 app.use(
   "/ProductImages",
@@ -40,9 +39,6 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/user", userRoutes);
 app.use('/api/taxonomy', taxonomyRoutes);
 
-// app.use("/auth", authRoutes);
-// app.use("/events", eventRoutes);
-// app.use(errorHandler);
 
 const startServer = async () => {
   try {
@@ -50,14 +46,13 @@ const startServer = async () => {
     console.log("Data Source initialized!");
 
     await ensureAdminExists();
-    // await seedTaxonomy();
 
     app.listen(4000, () =>
       console.log("Server running on http://localhost:4000"),
     );
   } catch (err) {
     console.error("Error during Data Source initialization", err);
-    // process.exit(1);
+    process.exit(1);
   }
 };
 

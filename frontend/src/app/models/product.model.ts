@@ -28,33 +28,3 @@ export interface ProductListResponse {
   limit: number;
   totalPages: number;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// export interface Product{
-//     id: number;
-//     name: string;
-//     description: string;
-//     price: number;
-//     stockQuantity: number;
-//     image: string | null;
-//     subCategory: string;
-// };
-
-// export interface ProductResponse{
-//     items: Product[];
-//     total: number;
-//     page: number;
-//     totalpages: number;
-// }

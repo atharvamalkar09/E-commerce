@@ -1,0 +1,116 @@
+.user-mgmt-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 36px 28px;
+}
+
+.user-mgmt-container h2 {
+  font-family: var(--font-h);
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--black);
+  margin-bottom: 6px;
+}
+
+.user-mgmt-container > p {
+  font-size: 13px;
+  color: var(--grey);
+  margin-bottom: 28px;
+}
+
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+
+.styled-table thead th {
+  background: var(--black);
+  color: var(--white);
+  padding: 13px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  text-align: left;
+}
+
+.styled-table tbody tr {
+  border-bottom: 1px solid var(--border);
+}
+
+.styled-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.styled-table tbody tr:hover td {
+  background: var(--cream);
+}
+
+.styled-table td {
+  padding: 14px 16px;
+  font-size: 14px;
+  color: var(--black);
+  vertical-align: middle;
+}
+
+.label-active {
+  display: inline-block;
+  background: #edf5f0;
+  color: var(--green);
+  border: 1px solid #b8dcc3;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.label-locked {
+  display: inline-block;
+  background: #fff0f0;
+  color: var(--red);
+  border: 1px solid #f5c6c6;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.btn-lock {
+  background: transparent;
+  color: var(--red);
+  border: 1px solid var(--red);
+  padding: 6px 14px;
+  border-radius: var(--r);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+.btn-lock:hover {
+  border-color: var(--black);
+  color: var(--black);
+}
+
+.btn-unlock {
+  background: transparent;
+  color: var(--green);
+  border: 1px solid var(--green);
+  padding: 6px 14px;
+  border-radius: var(--r);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+.btn-unlock:hover {
+  border-color: var(--black);
+  color: var(--black);
+}

@@ -1,1 +1,46 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Jost:wght@300;400;500;600&display=swap');
+
+:root {
+  --black:   #0d0d0d;
+  --white:   #f9f8f5;
+  --cream:   #f2efe8;
+  --gold:    #b8963e;
+  --grey:    #888;
+  --border:  #dedad2;
+  --red:     #b04040;
+  --green:   #3a6b45;
+  --r:       6px;
+
+  --font-h:  'Cormorant Garamond', Georgia, serif;
+  --font-b:  'Jost', sans-serif;
+  --nav-h:   54px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-b);
+  background: var(--white);
+  color: var(--black);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  padding-top: var(--nav-h);
+}
+
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; font-family: var(--font-b); }
+img { display: block; }
+h1, h2, h3, h4 { font-family: var(--font-h); font-weight: 400; line-height: 1.2; }
+
+input, select, textarea {
+  font-family: var(--font-b);
+  font-size: 14px;
+  color: var(--black);
+  border: 1px solid var(--border);
+  background: var(--white);
+  border-radius: var(--r);
+  outline: none;
+  padding: 10px 13px;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--gold); }

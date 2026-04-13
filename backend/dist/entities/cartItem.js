@@ -33,7 +33,7 @@ __decorate([
     __metadata("design:type", user_1.User)
 ], CartItem.prototype, "user", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => product_1.Product),
+    (0, typeorm_1.ManyToOne)(() => product_1.Product, { onDelete: 'CASCADE' }),
     __metadata("design:type", product_1.Product)
 ], CartItem.prototype, "product", void 0);
 exports.CartItem = CartItem = __decorate([

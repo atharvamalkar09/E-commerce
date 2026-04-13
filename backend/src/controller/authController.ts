@@ -1,4 +1,4 @@
-// src/controllers/auth.controller.ts
+
 import { Request, Response } from "express";
 
 import { sessionStore } from "../index";
@@ -27,8 +27,6 @@ export const login = async (req: Request, res: Response) => {
             httpOnly: true,
             secure: false,
             sameSite: "lax",
-            // path: "/",
-            // maxAge: 3600000 
         });
 
         res.json({ message: "Login Successful", user });
@@ -38,32 +36,26 @@ export const login = async (req: Request, res: Response) => {
     }
 };
 
-
-// export const getUser = async (req: any, res: Response) => {
-//     const token = req.cookies.token;
-//     console.log("Token from cookie:", token);
-    
-//     if (!token) return res.status(401).json({ message: "Unauthorized" });
-
-//     const session = sessionStore.get(token);
-//     if (!session) return res.status(401).json({ message: "Session invalid or expired" });
-//     console.log("Restoring session for:", session);
-
-//     res.json({session});
-// };
 export const getUser = async (req: any, res: Response) => {
     const token = req.cookies.token;
-    if (!token) return res.status(401).json({ message: "Unauthorized" });
+
+    if (!token) {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
 
     const session = sessionStore.get(token);
-    if (!session) return res.status(401).json({ message: "Session expired" });
+    if (!session) {
+        return res.status(401).json({ message: "Session expired" });
+    }
 
     try {
         const user = await userRepository.findOneBy({ id: session.userId });
-        if (!user) return res.status(404).json({ message: "User not found" });
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
 
         res.json({
-            id: user.id,    // Add this line!
+            id: user.id,
             name: user.name,
             email: user.email,
             role: user.role
@@ -72,15 +64,13 @@ export const getUser = async (req: any, res: Response) => {
         res.status(500).json({ message: "Server error" });
     }
 };
-// src/controllers/auth.controller.ts
+
 
 export const forgotPassword = async (req: Request, res: Response) => {
     try {
         const { email } = req.body;
         const code = await generateResetCode(email);
         
-        // Requirement 5.5: "display it directly on the screen" 
-        // We return it in the JSON so the Frontend can show it.
         res.json({ 
             message: "Reset code generated", 
             code: code 
@@ -105,7 +95,6 @@ export const updateProfile = async (req: any, res: Response) => {
         const session = sessionStore.get(token);
         const { name, email } = req.body;
 
-        // Check if new email is already taken by someone else
         const existingUser = await userRepository.findOneBy({ email });
         if (existingUser && existingUser.id !== session.userId) {
             return res.status(400).json({ message: "Email already in use" });
@@ -124,7 +113,6 @@ export const changePassword = async (req: any, res: Response) => {
         const session = sessionStore.get(token);
         const { oldPassword, newPassword } = req.body;
 
-        // We MUST use addSelect because passwordHash is hidden by default
         const user = await userRepository.createQueryBuilder("user")
             .addSelect("user.passwordHash")
             .where("user.id = :id", { id: session.userId })
@@ -132,11 +120,10 @@ export const changePassword = async (req: any, res: Response) => {
 
         if (!user) return res.status(404).json({ message: "User not found" });
 
-        // Compare using your entity's column name: passwordHash
         const isMatch = await bcrypt.compare(oldPassword, user.passwordHash);
         if (!isMatch) return res.status(400).json({ message: "Current password incorrect" });
 
-        // Hash and save
+
         user.passwordHash = await bcrypt.hash(newPassword, 10);
         await userRepository.save(user);
 
@@ -145,7 +132,7 @@ export const changePassword = async (req: any, res: Response) => {
         res.status(400).json({ message: "Failed to change password" });
     }
 };
-// Requirement 5.4: Clear cookie and session map
+
 export const logout = async (req: Request, res: Response) => {
     const token = req.cookies.token;
     if (token) {

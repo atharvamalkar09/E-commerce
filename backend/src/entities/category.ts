@@ -4,9 +4,6 @@ import { SubCategory } from "./subcategory";
 import { Type } from "./type";
 
 
-
-
-
 @Entity()
 export class Category{
 

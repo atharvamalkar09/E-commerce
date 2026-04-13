@@ -1,1 +1,16 @@
-<p>order-confirmation works!</p>
+<div class="confirm-container">
+      <h1>Order Placed Successfully!</h1>
+      <br>
+
+      <p>Thank you for your purchase. Your order has been received.</p>
+
+      <div class="order-details" *ngIf="orderData">
+        <p><strong>Order ID:</strong> #{{ orderData.orderId }}</p>
+        <p><strong>Total Paid:</strong> ${{ orderData.total }}</p>
+      </div>
+
+      <div class="actions">
+        <button routerLink="/products" class="btn-secondary">Continue Shopping</button>
+        <button routerLink="/orders/history" class="btn-primary">View My Orders</button>
+      </div>
+    </div>

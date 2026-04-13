@@ -13,7 +13,7 @@ export class SubCategory{
     name!:string;
 
     @ManyToOne(() => Category, (cat) => cat.subCategories, { 
-    onDelete: 'CASCADE' })  // <--- And this!
+    onDelete: 'CASCADE' })
     category!: Category;
 
     @OneToMany(() => Product, (product) => product.subCategory)

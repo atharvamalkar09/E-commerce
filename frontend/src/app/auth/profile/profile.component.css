@@ -1,0 +1,112 @@
+
+.profile-container {
+  max-width: 580px;
+  margin: 0 auto;
+  padding: 36px 28px;
+}
+
+.profile-container h1 {
+  font-family: var(--font-h);
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--black);
+  margin-bottom: 28px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.success-msg {
+  font-size: 13px;
+  color: var(--green);
+  background: #edf5f0;
+  border: 1px solid #b8dcc3;
+  padding: 11px 14px;
+  border-radius: var(--r);
+  margin-bottom: 20px;
+}
+
+.error-msg {
+  font-size: 13px;
+  color: var(--red);
+  background: #fff0f0;
+  border: 1px solid #f5c6c6;
+  padding: 11px 14px;
+  border-radius: var(--r);
+  margin-bottom: 20px;
+}
+
+.profile-section {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 30px;
+  margin-bottom: 20px;
+}
+
+.profile-section h3 {
+  font-family: var(--font-h);
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--black);
+  margin-bottom: 22px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.form-group { margin-bottom: 18px; }
+
+.form-group label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--grey);
+  margin-bottom: 7px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 11px 13px;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  font-size: 14px;
+  background: var(--white);
+  color: var(--black);
+  outline: none;
+}
+.form-group input:focus { border-color: var(--gold); }
+
+.btn-primary {
+  padding: 11px 24px;
+  background: var(--black);
+  color: var(--white);
+  border: 2px solid var(--black);
+  border-radius: var(--r);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.btn-primary:hover { background: transparent; color: var(--black); }
+
+.btn-danger {
+  padding: 11px 24px;
+  background: transparent;
+  color: var(--red);
+  border: 2px solid var(--red);
+  border-radius: var(--r);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.btn-danger:hover { border-color: var(--black); color: var(--black); }
+
+.separator {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0 0 20px;
+}

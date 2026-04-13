@@ -15,9 +15,12 @@ const JWT_SECRET = "your_super_secret_key";
 const registerUser = async (userData) => {
     const userRepository = data_source_1.AppDataSource.getRepository(user_1.User);
     const existingUser = await userRepository.findOneBy({ email: userData.email });
-    if (existingUser)
-        throw new Error("Email taken");
-    const hashedPassword = await bcrypt_1.default.hash(userData.password, 10);
+    // if (existingUser) throw new Error("Email taken");
+    if (existingUser) {
+        console.log("Email already registered");
+        throw new Error("Email already present");
+    }
+    const hashedPassword = await bcrypt_1.default.hash(userData.passwordHash, 10); // password
     const user = userRepository.create({
         name: userData.name,
         email: userData.email,
@@ -32,7 +35,11 @@ const validateLogin = async (email, password) => {
         where: { email },
         select: ["id", "name", "email", "passwordHash", "role", "isLocked"]
     });
-    if (!user || !(await bcrypt_1.default.compare(password, user.passwordHash))) {
+    if (!user) { // (await bcrypt.compare(password, user!.passwordHash))               // console
+        throw new Error("Invalid credentials!");
+    }
+    const passCompare = (await bcrypt_1.default.compare(password, user.passwordHash));
+    if (!passCompare) {
         throw new Error("Invalid credentials!");
     }
     if (user.isLocked) {
@@ -49,9 +56,7 @@ const generateResetCode = async (email) => {
     const user = await userRepo.findOneBy({ email });
     if (!user)
         throw new Error("User not found");
-    // Requirement 5.5: Generate temporary numeric code
     const tempCode = Math.floor(100000 + Math.random() * 900000).toString();
-    // Set expiry (e.g., 10 minutes from now)
     const expiresAt = new Date();
     expiresAt.setMinutes(expiresAt.getMinutes() + 10);
     const resetEntry = passwordResetRepo.create({

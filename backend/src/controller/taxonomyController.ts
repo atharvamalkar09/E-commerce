@@ -1,4 +1,4 @@
-// backend/src/controller/taxonomyController.ts
+
 import { Request, Response } from "express";
 import { AppDataSource } from "../data.source";
 import { Type } from "../entities/type";
@@ -25,7 +25,6 @@ export const addTaxonomy = async (req: Request, res: Response) => {
     const { level, name, parentId } = req.body;
     
     try {
-        // Validate required fields
         if (!level || !name) {
             return res.status(400).json({ 
                 message: "Missing required fields: level and name" 
@@ -40,7 +39,6 @@ export const addTaxonomy = async (req: Request, res: Response) => {
                 data: newType 
             });
         } else if (level === 'category') {
-            // Validate parentId for category
             if (!parentId) {
                 return res.status(400).json({ 
                     message: "Missing required field: parentId (typeId) for category" 
@@ -48,7 +46,6 @@ export const addTaxonomy = async (req: Request, res: Response) => {
             }
             
             const repo = AppDataSource.getRepository(Category);
-            // Verify the type exists
             const typeRepo = AppDataSource.getRepository(Type);
             const typeExists = await typeRepo.findOneBy({ id: Number(parentId) });
             
@@ -67,7 +64,7 @@ export const addTaxonomy = async (req: Request, res: Response) => {
                 data: newCategory 
             });
         } else if (level === 'subcategory') {
-            // Validate parentId for subcategory
+
             if (!parentId) {
                 return res.status(400).json({ 
                     message: "Missing required field: parentId (categoryId) for subcategory" 
@@ -75,7 +72,6 @@ export const addTaxonomy = async (req: Request, res: Response) => {
             }
             
             const repo = AppDataSource.getRepository(SubCategory);
-            // Verify the category exists
             const catRepo = AppDataSource.getRepository(Category);
             const catExists = await catRepo.findOneBy({ id: Number(parentId) });
             
@@ -118,7 +114,6 @@ export const deleteTaxonomy = async (req: Request, res: Response) => {
     };
 
     try {
-        // Validate required fields
         if (!level || !id) {
             return res.status(400).json({ 
                 message: "Missing required parameters: level and id" 
@@ -139,7 +134,6 @@ export const deleteTaxonomy = async (req: Request, res: Response) => {
             });
         }
 
-        // Check if the item exists before attempting deletion
         const repo = AppDataSource.getRepository(Entity);
         const item = await repo.findOneBy({ id: numId });
         
@@ -162,7 +156,6 @@ export const deleteTaxonomy = async (req: Request, res: Response) => {
     } catch (error: any) {
         console.error("Taxonomy delete error:", error);
         
-        // Check if error is due to foreign key constraint (cascade protection)
         if (error.message && (error.message.includes('FOREIGN KEY constraint failed') || error.message.includes('constraint'))) {
             return res.status(409).json({ 
                 message: `Cannot delete this ${level}. It has related items that must be deleted first.`,

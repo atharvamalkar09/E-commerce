@@ -1,4 +1,3 @@
-// src/services/cart.service.ts
 import { Response } from "express";
 import { AppDataSource } from "../data.source";
 import { CartItem } from "../entities/cartItem";
@@ -7,7 +6,6 @@ import { AuthRequest } from "../middleware/auth";
 const cartRepo = AppDataSource.getRepository(CartItem);
 
 export const addToCart = async (userId: number, productId: number, quantity: number) => {
-    // Find if item already exists for this user
     let item = await cartRepo.findOne({ 
         where: { user: { id: userId }, product: { id: productId } } 
     });
@@ -27,7 +25,7 @@ export const addToCart = async (userId: number, productId: number, quantity: num
 export const getCartByUser = async (userId: number) => {
     return await cartRepo.find({
         where: { user: { id: userId } },
-        relations: ["product"] // CRITICAL: This allows item.product.name to work
+        relations: ["product"]
     });
 };
 

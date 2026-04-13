@@ -18,8 +18,6 @@ export class CartComponent implements OnInit {
     private cartService: CartService,
     private router: Router,
   ) {
-    // Assign it here, after the service is injected
-    // this.cartItems$ = this.cartService.cartItems$;
     this.cartItems$ = this.cartService.cartItems$ || of([]);
   }
 
@@ -30,7 +28,6 @@ export class CartComponent implements OnInit {
   changeQty(item: any, delta: number): void {
     const newQty = item.quantity + delta;
     if (newQty > 0 && newQty <= item.product.stockQuantity) {
-      // Pass item.product.id here
       this.cartService.updateQuantity(item.product.id, newQty).subscribe();
     }
   }
@@ -43,51 +40,16 @@ export class CartComponent implements OnInit {
         },
         error: (err) => {
           console.error('Delete failed:', err);
-          alert('Could not remove item.');
         },
       });
     }
   }
 
-  // calculateTotal(items: any[]): number {
-  //   let total = 0;
-  //   this.cartItems$.subscribe((items) => {
-  //     total = items.reduce(
-  //       (acc, item) => acc + item.product.price * item.quantity,
-  //       0,
-  //     );
-  //   });
-  //   return total;
-  // }
 
-  // goToCheckout(items: any[]): void {
-  //   // Safety check: Don't allow checkout if cart was emptied somehow
-  //   if (!items || items.length === 0) {
-  //     alert('Your cart is empty. Add some products first!');
-  //     return;
-  //   }
-
-  //   console.log('Navigating to checkout with items:', items);
-
-  //   // Programmatically navigate to the /checkout route
-  //   this.router.navigate(['/checkout']);
-  // }
-
-  // getImageUrl(imagePath: string | null | undefined): string {
-  //   const BASE_URL = 'http://localhost:4000/ProductImages/';
-  //   if (!imagePath || imagePath.trim() === '') {
-  //     return `${BASE_URL}default-placeholder.png`;
-  //   }
-  //   if (imagePath.startsWith('http')) {
-  //     return imagePath;
-  //   }
-  //   return `${BASE_URL}${imagePath.replace('ProductImages/', '')}`;
-  // }
 
   getImageUrl(imagePath: string | null | undefined): string {
     const BASE_URL = "http://localhost:4000/ProductImages/";
     if (!imagePath) return BASE_URL + 'default-placeholder.png';
-    // Removes the prefix if the DB already stored it with "ProductImages/"
     const filename = imagePath.replace('ProductImages/', '');
     return BASE_URL + filename;
   }

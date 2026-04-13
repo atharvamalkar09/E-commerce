@@ -1,4 +1,3 @@
-// src/controllers/cart-order.controller.ts
 import { Response } from "express";
 
 import * as orderService from "../services/order.service";
@@ -21,7 +20,6 @@ export const handleCheckout = async (req: AuthRequest, res: Response) => {
         const { paymentMethod } = req.body;
         const order = await orderService.createOrderFromCart(req.user!.id, paymentMethod);
         
-        // Requirement 9.3: Redirect-ready response (Frontend will show confirmation)
         res.status(201).json({ 
             message: "Order placed successfully", 
             orderId: order.id,
@@ -40,7 +38,7 @@ export const getMyOrders = async (req: AuthRequest, res: Response) => {
 export const updateCart = async (req: AuthRequest, res: Response) => {
     try {
         const { productId, quantity } = req.body;
-        const userId = req.user!.id; // From your protect middleware
+        const userId = req.user!.id; 
 
         await updateCartquantity(userId, productId, quantity);
 
@@ -50,19 +48,10 @@ export const updateCart = async (req: AuthRequest, res: Response) => {
     }
 };
 
-// export const handleRemoveFromCart = async (req: AuthRequest, res: Response) => {
-//     try {
-//         const { productId } = req.params; 
-//         await removeFromCart(req.user!.id, Number(productId));
-//         res.json({ message: "Item removed from cart" });
-//     } catch (error: any) {
-//         res.status(400).json({ message: error.message });
-//     }
-// };
 
 export const handleRemoveFromCart = async (req: AuthRequest, res: Response) => {
   try {
-    const { productId } = req.params; // Must match the name in the route ":productId"
+    const { productId } = req.params; 
     const userId = req.user!.id;
 
     await removeFromCart(userId, Number(productId));
@@ -76,8 +65,7 @@ export const handleViewCart = async (req: AuthRequest, res: Response) => {
     try {
         const userId = req.user!.id;
         const cartItems = await getCartByUser(userId);
-        
-        // Return the items so the frontend can display them
+
         res.json(cartItems);
     } catch (error: any) {
         res.status(500).json({ message: "Error retrieving cart items" });
@@ -85,7 +73,7 @@ export const handleViewCart = async (req: AuthRequest, res: Response) => {
 };
 export const handleGetAllOrdersAdmin = async (req: AuthRequest, res: Response) => {
     try {
-        // You should have an admin check here or in your middleware
+  
         const orders = await orderService.getAllOrdersAdmin();
         res.json(orders);
     } catch (error: any) {

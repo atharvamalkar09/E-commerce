@@ -14,7 +14,7 @@ import { LoadingSpinnerComponent } from '../../shared/loading-spinner/loading-sp
 })
 export class UserManagementComponent implements OnInit {
 
-  isLoading = false;      // Controls the spinner
+  isLoading = false; 
   showConfirm = false;
   confirmMessage = '';
   selectedUser: User | null = null;
@@ -30,14 +30,13 @@ export class UserManagementComponent implements OnInit {
   }
 
  fetchCustomers() {
-  this.isLoading = true; // Hide component, show spinner
+  this.isLoading = true;
   
   this.http.get<User[]>(`${this.apiURL}/customers`).subscribe({
     next: (data) => {
       this.users = data;
-      // Small timeout to ensure the UI doesn't "flicker" too fast
       setTimeout(() => {
-        this.isLoading = false; // Hide spinner, show component
+        this.isLoading = false;
       }, 800); 
     },
     error: (err) => {
@@ -51,7 +50,7 @@ export class UserManagementComponent implements OnInit {
     this.isLoading = true;
     setTimeout(() => {
       this.isLoading = false;
-    }, 1500); // 1.5 seconds delay as requested
+    }, 1500);
   }
   openLockModal(user: User) {
     this.selectedUser = user;
@@ -71,15 +70,12 @@ export class UserManagementComponent implements OnInit {
     this.showLoader();
     const newStatus = !user.isLocked;
     
-    // Matches your Backend: router.post("/lock", updateLockStatus)
-    // updateLockStatus expects: { userId, isLocked }
     this.http.post(`${this.apiURL}/lock`, { 
       userId: user.id, 
       isLocked: newStatus 
     }).subscribe({
       next: () => {
-        user.isLocked = newStatus; // Update UI locally
-        alert(`User ${user.name} is now ${newStatus ? 'Locked' : 'Unlocked'}`);
+        user.isLocked = newStatus;
       },
       error: (err) => alert("Error updating lock status")
     });

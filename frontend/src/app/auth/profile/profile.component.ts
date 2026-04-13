@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -13,70 +13,59 @@ import { HttpClient } from '@angular/common/http';
 export class ProfileComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
-  // User details
   user = { name: '', email: '' };
-
-  // Password change fields
   passwordData = { oldPassword: '', newPassword: '', confirmPassword: '' };
-
   message = '';
   isError = false;
 
   ngOnInit() {
     this.http.get<any>('http://localhost:4000/api/auth/me').subscribe({
       next: (data) => {
-        // This fills the object that [(ngModel)] is watching
         this.user.name = data.name;
         this.user.email = data.email;
       },
-      error: (err) => {
-        console.error('Could not fetch user data', err);
-      },
+      error: (err) => console.error('Could not fetch user data', err),
     });
   }
 
-  //   updateProfile() {
-  //   // Logic to call PATCH /api/auth/update-me
-  //   this.http.patch('http://localhost:4000/api/auth/update-me', this.user).subscribe({
-  //     next: () => this.showMessage("Profile updated successfully!"),
-  //     error: (err) => this.showMessage(err.error.message, true)
-  //   });
-  // }
-
   updateProfile() {
-    const url = 'http://localhost:4000/api/user/update-me';
-
-    this.http.patch(url, this.user).subscribe({
-      next: (res) => {
-        this.message = 'Profile updated successfully!';
-        this.isError = false;
+    this.http.patch('http://localhost:4000/api/user/update-me', this.user).subscribe({
+      next: () => {
+        this.showMessage('Profile updated successfully!');
       },
       error: (err) => {
-        console.error('Patch Error:', err);
-        this.message = err.error?.message || 'Update failed';
-        this.isError = true;
+        this.showMessage(err.error?.message || 'Update failed', true);
       },
     });
   }
 
   changePassword() {
     if (this.passwordData.newPassword !== this.passwordData.confirmPassword) {
-      return this.showMessage('Passwords do not match!', true);
+      this.showMessage('Passwords do not match!', true);
+      return;
     }
-    // Logic to call POST /api/auth/change-password
-    this.http
-      .post('http://localhost:4000/api/user/change-password', this.passwordData)
-      .subscribe({
-        next: () => {
-          this.showMessage('Password changed!');
-          this.passwordData = {
-            oldPassword: '',
-            newPassword: '',
-            confirmPassword: '',
-          };
-        },
-        error: (err) => this.showMessage(err.error.message, true),
-      });
+
+    const payload = {
+      oldPassword: this.passwordData.oldPassword,
+      newPassword: this.passwordData.newPassword
+    };
+
+    console.log('Sending password change:', payload);
+
+    this.http.post('http://localhost:4000/api/user/change-password', payload).subscribe({
+      next: (res: any) => {
+        this.showMessage(res.message || 'Password changed successfully!');
+        this.passwordData = {
+          oldPassword: '',
+          newPassword: '',
+          confirmPassword: '',
+        };
+      },
+      error: (err) => {
+        console.error('Password change error:', err);
+        this.showMessage(err.error?.message || 'Password change failed', true);
+      },
+    });
   }
 
   private showMessage(text: string, isError = false) {
